@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics
 from rest_framework import permissions
-from api.serializers import UserSerializer, GroupSerializer, UserProfileSerializer
+from api.serializers import UserSerializer, GroupSerializer, UserProfileSerializer, RegisterSerializer
 from .models import UserProfile
 
 
@@ -27,3 +27,9 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    # permission_classes = [AllowAny,]
+    serializer_class = RegisterSerializer
+
