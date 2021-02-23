@@ -40,6 +40,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			)
 
 		user.set_password(validated_data['password'])
+		# user.is_active
 		user.save()
 
 		return user
