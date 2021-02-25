@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from .models import UserProfile, Project
+from .models import UserProfile, Project, Mail
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -68,6 +68,12 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 			'bussiness_idea':{'required':True},
 			'created_by':{'required':True}
 		}
+
+class MailSerializer(serializers.HyperlinkedModelSerializer):
+
+	class Meta:
+		model = Mail
+		fields = '__all__'
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

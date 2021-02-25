@@ -43,3 +43,11 @@ class Project(models.Model):
 
 	def __str__(self):
 		return self.title
+
+class Mail(models.Model):
+	to = models.ManyToManyField(User,related_name='mails', blank=True)
+	to_all = models.BooleanField(blank=True, default = False)
+	email_subject = models.CharField(max_length=255, null=False, unique=False, default='Udicti')
+	email_body = models.TextField(blank=False)
+	date_created = models.DateField(auto_now_add=True)
+	sent = models.BooleanField(blank=True, default = False)

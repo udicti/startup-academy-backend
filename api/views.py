@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics
 from rest_framework import permissions
-from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer, UserProfileSerializer
-from .models import UserProfile, Project
+from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer, UserProfileSerializer, MailSerializer
+from .models import UserProfile, Project, Mail
+import requests as req
+import json
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -22,6 +25,61 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class MailViewSet(viewsets.ModelViewSet):
+    queryset = Mail.objects.all()
+    serializer_class = MailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+def send_mail(data):
+    headers={"Authorization":"Token "+ "5511bb046ac1cefb1129a17498d8c5c0786474d7"}
+    data = req.post("https://udictimailer.herokuapp.com/send/", data=data, headers=headers)
+    # print(data.text)
+    return data
+
+def send_email(request, id):
+    all_emails = [i.email for i in User.objects.all().filter(is_staff = False)]
+    mail = Mail.objects.get(id = id)
+    if mail:
+        email = {
+            "email-subject":mail.email_subject,
+            "email-body":mail.email_body
+        }
+
+        if mail.to_all == True:
+            receivers = ""
+            for i in all_emails:
+                if i != "":
+                    receivers += ","+i
+            if receivers[0] == ",":
+                receivers = receivers[1:]
+            email["email-receiver"] = receivers
+
+        if mail.to_all == False:
+            receivers = ""
+            # print(mail.to.all())
+            try:
+                rec = [i.email for i in mail.to.all()]
+                # print(rec)
+            except:
+                return HttpResponse("the receivers have no email")
+
+            for i in rec:
+                if i != "":
+                    receivers += ","+i
+            if receivers[0] == ",":
+                receivers = receivers[1:]
+
+            email["email-receiver"] = receivers
+
+        print(email)
+        res = send_mail(email).reason
+        # res = 'OK'
+        if res == 'OK':
+            mail.sent = True
+            mail.save()
+            return HttpResponse("Sent")
+        return HttpResponse("Failed to send email")
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
