@@ -15,7 +15,8 @@ from django.contrib.sites.models import Site
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
 	current_site = Site.objects.get_current()
-	email_plaintext_message = "{}{}?token={}".format(current_site.domain,reverse('password_reset:reset-password-request'), reset_password_token.key)
+	# email_plaintext_message = "{}{}?token={}".format(current_site.domain,reverse('password_reset:reset-password-request'), reset_password_token.key)
+	email_plaintext_message = "password reset token is {}".format(reset_password_token.key)
 
 	data = {
 		"email-subject":
@@ -23,7 +24,6 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 		"email-body": email_plaintext_message,
 		"email-receiver":[reset_password_token.user.email]
 		}
-
 	send_mail(data)
 
 
