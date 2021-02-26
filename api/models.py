@@ -9,12 +9,13 @@ from django.utils.translation import gettext_lazy as _
 from datetime import datetime 
 from django.utils import timezone
 from .send_mail import send_mail
-
+from django.contrib.sites.models import Site
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-	email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+	current_site = Site.objects.get_current()
+	email_plaintext_message = "{}{}?token={}".format(current_site.domain,reverse('password_reset:reset-password-request'), reset_password_token.key)
 
 	data = {
 		"email-subject":
