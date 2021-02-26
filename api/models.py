@@ -2,9 +2,28 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime 
 from django.utils import timezone
+from .send_mail import send_mail
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+	email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+
+	data = {
+		"email-subject":
+		"Password Reset for {title}".format(title="Your Udicthub Account"),
+		"email-body": email_plaintext_message,
+		"email-receiver":[reset_password_token.user.email]
+		}
+
+	send_mail(data)
 
 
 def script_injection(value):
