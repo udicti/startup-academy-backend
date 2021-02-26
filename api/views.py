@@ -1,12 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .token_generator import account_activation_token
+from django.template.loader import render_to_string
+
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer, UserProfileSerializer, MailSerializer
 from .models import UserProfile, Project, Mail
-import requests as req
 import json
+from .send_mail import send_mail
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -30,12 +39,6 @@ class MailViewSet(viewsets.ModelViewSet):
     queryset = Mail.objects.all()
     serializer_class = MailSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-def send_mail(data):
-    headers={"Authorization":"Token "+ "5511bb046ac1cefb1129a17498d8c5c0786474d7"}
-    data = req.post("https://udictimailer.herokuapp.com/send/", data=data, headers=headers)
-    # print(data.text)
-    return data
 
 def send_email(request, id):
     all_emails = [i.email for i in User.objects.all().filter(is_staff = False)]
@@ -88,6 +91,21 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return HttpResponse('Your account has been activate successfully')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 
 

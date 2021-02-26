@@ -19,6 +19,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'corsheaders',
+    'six',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,8 @@ REST_FRAMEWORK = {
 }
 
 AUTH_PROFILE_MODULE = "api.UserProfile"
+
+SITE_ID = 1
 
 LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'

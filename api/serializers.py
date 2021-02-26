@@ -1,8 +1,20 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .token_generator import account_activation_token
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
+
+
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import UserProfile, Project, Mail
+from .send_mail import send_mail
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -36,13 +48,30 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			username=validated_data['username'],
 			email=validated_data['email'],
 			first_name=validated_data['first_name'],
-			last_name=validated_data['last_name']
+			last_name=validated_data['last_name'],
+			is_active=False
 			)
 
 		user.set_password(validated_data['password'])
 		# user.is_active
-		user.save()
+		data = {}
+		current_site = Site.objects.get_current()
+		email_subject = 'Activate Your Account'
+		message = render_to_string('activate_account.html', {
+			'user': user,
+			'domain': current_site.domain,
+			'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+			'token': account_activation_token.make_token(user),
+			})
+		
+		data["email-subject"] = email_subject
+		data["email-receiver"] = validated_data['email']
+		data["email-body"] = message
 
+		send_mail(data)
+
+		user.save()
+		
 		return user
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):

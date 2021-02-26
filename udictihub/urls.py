@@ -23,5 +23,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),\
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     url(r'^docs', schema_view),
-    path('<int:id>/send_email/', views.send_email)
+    path('<int:id>/send_email/', views.send_email),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate_account, name='activate'),
 ]
