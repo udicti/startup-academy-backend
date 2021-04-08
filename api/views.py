@@ -10,13 +10,26 @@ from .token_generator import account_activation_token
 from django.template.loader import render_to_string
 
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, views
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer, UserProfileSerializer, MailSerializer, ChangePasswordSerializer
 from .models import UserProfile, Project, Mail
 import json
 from .send_mail import send_mail
+
+class CurrentUser(views.APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(request.user, context={'request': request})
+        # print(user)
+        return Response(serializer.data)
+
+    def post(self):
+        pass
 
 class UserViewSet(viewsets.ModelViewSet):
     """

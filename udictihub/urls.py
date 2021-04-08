@@ -19,8 +19,9 @@ router.register(r'mails', views.MailViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+    path('current-user/', views.CurrentUser.as_view()),
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),\
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     url(r'^docs', schema_view),
     path('<int:id>/send_email/', views.send_email),

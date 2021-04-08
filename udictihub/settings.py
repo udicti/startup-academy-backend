@@ -12,9 +12,6 @@ SECRET_KEY = '+!w6bo+k@(!8ai*^dv()@%vk6ja6v-9b59t*mj-e5l3kg_#n)2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -25,24 +22,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'api',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
-    'corsheaders',
     'six',
     'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'udictihub.urls'
@@ -71,27 +68,28 @@ WSGI_APPLICATION = 'udictihub.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'NAME': 'udicti_db',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': 27017,
-        'ENGINE': 'djongo',
-        'CLIENT': {
-                'name':'udicti_db',
-                'host': 'mongodb+srv://silicon:silicon@udictihub.pei4k.mongodb.net/udicti_db?retryWrites=true&w=majority',
-                'username': 'silicon',
-                'password': 'silicon',
-                'authMechanism': 'SCRAM-SHA-1'
-            },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'udicti_db',
+        'HOST': '127.0.0.1',
+        'PORT': 27017,
+        # 'ENGINE': 'djongo',
+        # 'CLIENT': {
+        #         'name':'udicti_db',
+        #         'host': 'mongodb+srv://silicon:silicon@udictihub.pei4k.mongodb.net/udicti_db?retryWrites=true&w=majority',
+        #         'username': 'silicon',
+        #         'password': 'silicon',
+        #         'authMechanism': 'SCRAM-SHA-1'
+        #     },
     }
 }
 
+ALLOWED_HOSTS = ["http://127.0.0.1:4200"]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8081',
-)
+CORS_ALLOWED_ORIGINS = [
+       'http://localhost:4200',
+       'http://127.0.0.1:4200',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
