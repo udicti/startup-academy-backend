@@ -73,14 +73,6 @@ DATABASES = {
         'NAME': 'udicti_db',
         'HOST': '127.0.0.1',
         'PORT': 27017,
-        # 'ENGINE': 'djongo',
-        # 'CLIENT': {
-        #         'name':'udicti_db',
-        #         'host': 'mongodb+srv://silicon:silicon@udictihub.pei4k.mongodb.net/udicti_db?retryWrites=true&w=majority',
-        #         'username': 'silicon',
-        #         'password': 'silicon',
-        #         'authMechanism': 'SCRAM-SHA-1'
-        #     },
     }
 }
 
