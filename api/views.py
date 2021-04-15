@@ -13,8 +13,10 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics, views
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer, UserProfileSerializer, MailSerializer, ChangePasswordSerializer
-from .models import UserProfile, Project, Mail
+from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,\
+     UserProfileSerializer, MailSerializer, ChangePasswordSerializer, \
+         ReviewReplySerializer, CommentSerializer, CommentReplySerializer, ReviewSerializer, BlogPostSerializer, TopProjectSerializer
+from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject
 import json
 from .send_mail import send_mail
 
@@ -23,13 +25,39 @@ class CurrentUser(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request):
-        users = User.objects.all()
         serializer = UserSerializer(request.user, context={'request': request})
-        # print(user)
         return Response(serializer.data)
 
     def post(self):
         pass
+
+class CurrentUserProfile(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        profile = UserProfile.objects.filter(user = request.user).first()
+        serializer = UserProfileSerializer(profile, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self):
+        pass
+
+class CurrentUserProjects(views.APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        projects = Project.objects.filter(created_by = request.user).all().order_by('-date_created')
+        # print(projects)
+        data = []
+        for i in projects:
+            serializer = ProjectSerializer(i, context={'request': request})
+            data.append(serializer.data)
+        return Response({'data':data})
+
+    def post(self):
+        pass
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -44,9 +72,39 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class TopProjectViewSet(viewsets.ModelViewSet):
+    queryset = TopProject.objects.all()
+    serializer_class = TopProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ReviewReplyViewSet(viewsets.ModelViewSet):
+    queryset = ReviewReply.objects.all()
+    serializer_class = ReviewReplySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class BlogPostViewSet(viewsets.ModelViewSet):
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CommentReplyViewSet(viewsets.ModelViewSet):
+    queryset = CommentReply.objects.all()
+    serializer_class = CommentReplySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class MailViewSet(viewsets.ModelViewSet):

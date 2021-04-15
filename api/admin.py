@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Project, Mail
+from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review
 from django.utils.http import urlencode
 from django.utils.html import format_html
 from django.urls import reverse
@@ -25,3 +25,25 @@ class MailAdmin(admin.ModelAdmin):
         return  format_html('<label>sent</label>', url)
 
     send_email_link.short_description = "action"
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_project')
+
+@admin.register(ReviewReply)
+class ReviewReplyAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_review')
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title','author','date_created')
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_post')
+
+@admin.register(CommentReply)
+class CoommentReviewAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_comment')
+

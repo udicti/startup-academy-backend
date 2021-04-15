@@ -13,11 +13,9 @@ from django.contrib.sites.models import Site
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
-	current_site = Site.objects.get_current()
+	# current_site = Site.objects.get_current()
 	# email_plaintext_message = "{}{}?token={}".format(current_site.domain,reverse('password_reset:reset-password-request'), reset_password_token.key)
 	email_plaintext_message = "password reset token is {}".format(reset_password_token.key)
-
 	data = {
 		"email-subject":
 		"Password Reset for {title}".format(title="Your Udicthub Account"),
@@ -32,10 +30,14 @@ def script_injection(value):
         raise ValidationError(_('Script injection in %(value)s'),
                               params={'value': value})
 
+
+# User profile 
+
 STUDY_PERIODS = [(3,"Three"),(4,"Four")]
 
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE, blank=False, default=1)
+	profile_pic = models.ImageField(upload_to='profile_pics', null=True)
 	group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, default=1)
 	bio = models.TextField(max_length=5000)
 	mobile = models.CharField(max_length=10, blank = True)
@@ -49,9 +51,14 @@ class UserProfile(models.Model):
 	def __str__(self):
 		return self.user.username
 
+
+# Projects and Commenting system
+
 class Project(models.Model):
-	owners = models.ManyToManyField(User,related_name='projects', blank=True)
-	created_by = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE, null=False, default=1)
+	owners = models.ManyToManyField(User,related_name='owned_projects', blank=True)
+	created_by = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE, null=False, default=1)
+	project_pic = models.ImageField(upload_to='project_pics/avatar', null=True)
+	project_cover = models.ImageField(upload_to='project_pics/cover', null=True)
 	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
 	bussiness_idea = models.TextField(blank = True)
 	problem_solved = models.TextField(blank=True)
@@ -63,6 +70,50 @@ class Project(models.Model):
 
 	def __str__(self):
 		return self.title
+
+class TopProject(models.Model):
+	Project = models.ForeignKey(Project, on_delete=models.CASCADE) 
+
+	def __str__(self):
+		return self.project.title 
+
+class Review(models.Model):
+	from_user = models.ForeignKey(User, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
+	to_project = models.ForeignKey(Project, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
+	body = models.TextField(blank=True)
+	date_created = models.DateField(auto_now_add=True)
+
+class ReviewReply(models.Model):
+	from_user = models.ForeignKey(User, related_name='review_replies', on_delete=models.CASCADE, null=False, default=1)
+	to_review = models.ForeignKey(Review, related_name='review_replies', on_delete=models.CASCADE, null=False, default=1)
+	body = models.TextField(blank=True)
+	date_created = models.DateField(auto_now_add=True)
+
+
+# Blog post ang commenting system
+
+class BlogPost(models.Model):
+	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
+	image = models.ImageField(upload_to='blog_pics', null=True)
+	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE, null=False, default=1)
+	body = models.TextField(blank=True)
+	date_created = models.DateField(auto_now_add=True)
+	likes = models.IntegerField(default=0)
+	published = models.BooleanField(blank=True, default = False)
+
+class Comment(models.Model):
+	from_user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE, null=False, default=1)
+	to_post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE, null=False, default=1)
+	body = models.TextField(blank=True)
+	date_created = models.DateField(auto_now_add=True)
+
+class CommentReply(models.Model):
+	from_user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE, null=False, default=1)
+	to_comment = models.ForeignKey(Comment, related_name='comment_replies', on_delete=models.CASCADE, null=False, default=1)
+	body = models.TextField(blank=True)
+	date_created = models.DateField(auto_now_add=True)
+
+# Mails System
 
 class Mail(models.Model):
 	to = models.ManyToManyField(User,related_name='mails', blank=True)
