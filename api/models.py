@@ -38,15 +38,14 @@ STUDY_PERIODS = [(3,"Three"),(4,"Four")]
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE, blank=False, default=1)
 	profile_pic = models.ImageField(upload_to='profile_pics', null=True)
-	group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, default=1)
 	bio = models.TextField(max_length=5000)
 	mobile = models.CharField(max_length=10, blank = True)
 	university = models.CharField(max_length=255, blank = True)
 	college = models.CharField(max_length=255, blank = True)
 	programme = models.CharField(max_length=255, blank = True)
-	study_period = models.IntegerField(blank = True, default=3, choices=STUDY_PERIODS)
+	study_period = models.IntegerField(blank=True, null=True, default=3, choices=STUDY_PERIODS)
 	year_of_study = models.IntegerField(blank=True, default=datetime.today().year)
-	admission_date = models.DateTimeField(blank = True, default=timezone.now)
+	admission_date = models.DateTimeField(blank=True, default=timezone.now)
 
 	def __str__(self):
 		return self.user.username

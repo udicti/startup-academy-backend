@@ -27,6 +27,11 @@ router.register(r'mails', views.MailViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+    path('validate-username/', views.ValidateUsername.as_view()),
+    path('validate-email/', views.ValidateEmail.as_view()),
+    path('validate-password/', views.ValidatePassword.as_view()),
+    path('create-user/', views.CreateUser.as_view()),
+    path('create-user/profile', views.CreateUserProfile.as_view()),
     path('current-user/', views.CurrentUser.as_view()),
     path('current-user/projects', views.CurrentUserProjects.as_view()),
     path('current-user/profile', views.CurrentUserProfile.as_view()),

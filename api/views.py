@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, password_validation
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -19,6 +19,43 @@ from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,\
 from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject
 import json
 from .send_mail import send_mail
+
+class ValidateEmail(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        try:
+            print(request.data["email"])
+        except:
+            pass
+        return Response({"message":"live"})
+
+class ValidateUsername(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        try:
+            print(request.data["username"])
+        except:
+            pass
+        return Response({"message":"live"})
+
+class ValidatePassword(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        try:
+            data = password_validation.validate_password(request.data['password'])
+        except:
+            return Response({"message":"weak"})
+        return Response({"message":"strong"})
+
+class CreateUser(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
+
+class CreateUserProfile(generics.CreateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.AllowAny]
 
 class CurrentUser(views.APIView):
 

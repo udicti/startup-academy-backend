@@ -7,7 +7,6 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token_generator import account_activation_token
-from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 
 from rest_framework.validators import UniqueValidator
@@ -49,7 +48,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			last_name=validated_data['last_name'],
 			is_active=False
 			)
-
+		user.groups.set(validated_data['groups'])
 		user.set_password(validated_data['password'])
 		user.is_active = True
 		# data = {}
