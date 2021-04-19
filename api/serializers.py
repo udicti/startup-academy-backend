@@ -11,19 +11,22 @@ from django.contrib.sites.models import Site
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject
+from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject, ProjectLike, PostLike
 from .send_mail import send_mail
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 	profile = serializers.SerializerMethodField("get_profile_serializer")
 	projects = serializers.HyperlinkedRelatedField(many=True, view_name='project-detail', read_only=True)
+	# project_likes = serializers.HyperlinkedRelatedField(many=True, view_name='projectLike-detail', read_only=True)
+	# post_likes = serializers.HyperlinkedRelatedField(many=True, view_name='postLike-detail', read_only=True)
 	password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 	password2 = serializers.CharField(write_only=True, required=True)
 
 	class Meta:
 		model = User
-		fields = ['url','username', 'first_name', 'last_name','email','last_login','date_joined','password', 'password2','groups','profile', 'projects']
+		fields = ['url','username', 'first_name', 'last_name','email','last_login','date_joined','password',\
+			 'password2','groups','profile', 'projects', 'project_likes', 'post_likes']
 		extra_kwargs = {
 			'first_name':{'required':True},
 			'last_name':{'required':True},
@@ -88,22 +91,36 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 class TopProjectSerializer(serializers.HyperlinkedModelSerializer):
 
-	projects = serializers.SerializerMethodField("get_projects_serializer")
+	project_info = serializers.SerializerMethodField("get_project_serializer")
 
 	class Meta:
 		model = TopProject
 		fields = '__all__'
 
-	def get_projects_serializer(self, obj):
+	def get_project_serializer(self, obj):
 		request = self.context.get('request')
 		serializer_context = {'request':request}
-		projects = obj.projects.all()
-		data = [TopProjectSerializer(project, context=serializer_context) for project in projects]
+		project = obj.project
+		data = ProjectSerializer(project, context=serializer_context).data
 		return data 
 
+class PostLikeSerializer(serializers.HyperlinkedModelSerializer):
+
+	class Meta:
+		model = PostLike
+		fields = '__all__'
+
+
+class ProjectLikeSerializer(serializers.HyperlinkedModelSerializer):
+
+	class Meta:
+		model = ProjectLike
+		fields = '__all__'
+
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
-	created_by = serializers.SerializerMethodField("get_user_serializer")
-	owners = serializers.SerializerMethodField("get_owners_serializer")
+	owners_info = serializers.SerializerMethodField("get_owners_info_serializer")
+	creator_info = serializers.SerializerMethodField("get_creator_info_serializer")
+	likes = serializers.SerializerMethodField("get_likes_serializer")
 
 	class Meta:
 		model = Project
@@ -111,22 +128,31 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 		extra_kwargs = {
 			'title':{'required':True},
 			'bussiness_idea':{'required':True},
-			'created_by':{'required':True}
+			'created_by':{'required':True},
+			'owners':{'required':True}
 		}
 
-	def get_user_serializer(self, obj):
-		request = self.context.get('request')
-		serializer_context = {'request':request}
-		user = obj.created_by
-		serializer = UserSerializer(user, context=serializer_context)
-		return serializer.data 
 
-	def get_owners_serializer(self, obj):
+	def get_owners_info_serializer(self, obj):
 		request = self.context.get('request')
 		serializer_context = {'request':request}
-		users = obj.owners.all()
-		data = [UserSerializer(user, context=serializer_context).data for user in users]
-		return data 
+		owners = obj.owners.all()
+		data = [UserSerializer(user, context = serializer_context).data for user in owners]
+		return data
+
+	def get_creator_info_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		creator = obj.created_by
+		serializer = UserSerializer(creator, context = serializer_context)
+		return serializer.data
+
+	def get_likes_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		users = [i.from_user for i in obj.project_likes.all()]
+		data = [UserSerializer(user, context = serializer_context).data for user in users ]
+		return data
 
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -154,6 +180,7 @@ class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 
 	comments = serializers.SerializerMethodField("get_comments_serializer")
 	author = serializers.SerializerMethodField("get_author_serializer")
+	likes = serializers.SerializerMethodField("get_likes_serializer")
 
 	class Meta:
 		model = BlogPost
@@ -178,7 +205,12 @@ class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 		data = [CommentSerializer(comment, context = serializer_context).data for comment in comments]
 		return data
 
-	
+	def get_likes_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		users = [i.from_user for i in obj.post_likes.all()]
+		data = [UserSerializer(user, context = serializer_context).data for user in users ]
+		return data
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
 	comment_replies = serializers.SerializerMethodField("get_commentreplies_serializer")

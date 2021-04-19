@@ -23,6 +23,8 @@ router.register(r'blog-posts', views.BlogPostViewSet)
 router.register(r'comments', views.CommentViewSet)
 router.register(r'comment-replies', views.CommentReplyViewSet)
 router.register(r'mails', views.MailViewSet)
+router.register(r'post-likes', views.PostLikeViewSet)
+router.register(r'project-likes', views.ProjectLikeViewSet)
 
 
 urlpatterns = [

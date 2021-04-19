@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review
+from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject, PostLike, ProjectLike
 from django.utils.http import urlencode
 from django.utils.html import format_html
 from django.urls import reverse
@@ -9,6 +9,10 @@ from django.urls import reverse
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('created_by', 'title')
+
+@admin.register(TopProject)
+class TopProjectAdmin(admin.ModelAdmin):
+    list_display = ('project',)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -25,6 +29,14 @@ class MailAdmin(admin.ModelAdmin):
         return  format_html('<label>sent</label>', url)
 
     send_email_link.short_description = "action"
+    
+@admin.register(PostLike)
+class PostLikeAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_post')
+
+@admin.register(ProjectLike)
+class ProjectLikeAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_project')
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

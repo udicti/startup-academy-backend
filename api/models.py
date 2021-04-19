@@ -54,27 +54,33 @@ class UserProfile(models.Model):
 # Projects and Commenting system
 
 class Project(models.Model):
-	owners = models.ManyToManyField(User,related_name='owned_projects', blank=True)
-	created_by = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE, null=False, default=1)
-	project_pic = models.ImageField(upload_to='project_pics/avatar', null=True)
-	project_cover = models.ImageField(upload_to='project_pics/cover', null=True)
-	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
-	bussiness_idea = models.TextField(blank = True)
+	owners = models.ManyToManyField(User,related_name='owned_projects')
+	created_by = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE)
+	project_pic = models.ImageField(upload_to='project_pics/avatar', blank=True)
+	project_cover = models.ImageField(upload_to='project_pics/cover', blank=True)
+	title = models.CharField(max_length=255, null=False, unique=True, default='A Project title')
+	bussiness_idea = models.TextField(blank=True)
 	problem_solved = models.TextField(blank=True)
 	value_it_brings = models.TextField(blank=True)
 	to_whom = models.TextField(blank=True)
-	is_profitable = models.BooleanField(blank=True, default = False)
-	members_in_udsm = models.BooleanField(blank=True, default = False)
+	is_profitable = models.BooleanField(default = False)
+	members_in_udsm = models.BooleanField(default = False)
 	date_created = models.DateField(auto_now_add=True)
 
 	def __str__(self):
 		return self.title
 
 class TopProject(models.Model):
-	Project = models.ForeignKey(Project, on_delete=models.CASCADE) 
+	project = models.ForeignKey(Project, on_delete=models.CASCADE) 
+	accomplishments = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.project.title 
+
+class ProjectLike(models.Model):
+	from_user = models.ForeignKey(User, related_name='project_likes', on_delete=models.CASCADE, null=False, default=1)
+	to_project = models.ForeignKey(Project, related_name='project_likes', on_delete=models.CASCADE, null=False, default=1)
+	date_liked = models.DateField(auto_now_add=True)
 
 class Review(models.Model):
 	from_user = models.ForeignKey(User, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
@@ -97,8 +103,12 @@ class BlogPost(models.Model):
 	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE, null=False, default=1)
 	body = models.TextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
-	likes = models.IntegerField(default=0)
 	published = models.BooleanField(blank=True, default = False)
+
+class PostLike(models.Model):
+	from_user = models.ForeignKey(User, related_name='post_likes', on_delete=models.CASCADE, null=False, default=1)
+	to_post = models.ForeignKey(BlogPost, related_name='post_likes', on_delete=models.CASCADE, null=False, default=1)
+	date_liked = models.DateField(auto_now_add=True)
 
 class Comment(models.Model):
 	from_user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE, null=False, default=1)

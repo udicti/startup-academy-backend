@@ -13,10 +13,10 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics, views
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,\
+from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,PostLikeSerializer, ProjectLikeSerializer, \
      UserProfileSerializer, MailSerializer, ChangePasswordSerializer, \
          ReviewReplySerializer, CommentSerializer, CommentReplySerializer, ReviewSerializer, BlogPostSerializer, TopProjectSerializer
-from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject
+from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject, PostLike, ProjectLike
 import json
 from .send_mail import send_mail
 
@@ -24,19 +24,23 @@ class ValidateEmail(views.APIView):
     permission_classes = [permissions.AllowAny]
     def post(self, request):
         try:
-            print(request.data["email"])
+            user = User.objects.filter(email=request.data["email"]).first()
+            if user:
+                return Response({"message":"exists"})
         except:
             pass
-        return Response({"message":"live"})
+        return Response({"message":"does not exist"})
 
 class ValidateUsername(views.APIView):
     permission_classes = [permissions.AllowAny]
     def post(self, request):
         try:
-            print(request.data["username"])
+            user = User.objects.filter(username=request.data["username"]).first()
+            if user:
+                return Response({"message":"exists"})
         except:
             pass
-        return Response({"message":"live"})
+        return Response({"message":"does not exist"})
 
 class ValidatePassword(views.APIView):
     permission_classes = [permissions.AllowAny]
@@ -58,31 +62,20 @@ class CreateUserProfile(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
 class CurrentUser(views.APIView):
-
-    permission_classes = [permissions.IsAuthenticated]
-    
+    permission_classes = [permissions.IsAuthenticated]    
     def get(self, request):
         serializer = UserSerializer(request.user, context={'request': request})
         return Response(serializer.data)
 
-    def post(self):
-        pass
-
 class CurrentUserProfile(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
     def get(self, request):
         profile = UserProfile.objects.filter(user = request.user).first()
         serializer = UserProfileSerializer(profile, context={'request': request})
         return Response(serializer.data)
 
-    def post(self):
-        pass
-
 class CurrentUserProjects(views.APIView):
-
     permission_classes = [permissions.IsAuthenticated]
-    
     def get(self, request):
         projects = Project.objects.filter(created_by = request.user).all().order_by('-date_created')
         # print(projects)
@@ -91,10 +84,6 @@ class CurrentUserProjects(views.APIView):
             serializer = ProjectSerializer(i, context={'request': request})
             data.append(serializer.data)
         return Response({'data':data})
-
-    def post(self):
-        pass
-
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -117,6 +106,16 @@ class TopProjectViewSet(viewsets.ModelViewSet):
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ProjectLikeViewSet(viewsets.ModelViewSet):
+    queryset = ProjectLike.objects.all()
+    serializer_class = ProjectLikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PostLikeViewSet(viewsets.ModelViewSet):
+    queryset = PostLike.objects.all()
+    serializer_class = PostLikeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ReviewViewSet(viewsets.ModelViewSet):
