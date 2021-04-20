@@ -100,7 +100,7 @@ class ReviewReply(models.Model):
 class BlogPost(models.Model):
 	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
 	image = models.ImageField(upload_to='blog_pics', null=True)
-	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE, null=False, default=1)
+	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
 	body = models.TextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 	published = models.BooleanField(blank=True, default = False)

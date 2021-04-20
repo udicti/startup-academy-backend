@@ -19,7 +19,7 @@ if on_heroku == False:
 SECRET_KEY = '+!w6bo+k@(!8ai*^dv()@%vk6ja6v-9b59t*mj-e5l3kg_#n)2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Application definition
 

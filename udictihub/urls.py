@@ -29,6 +29,7 @@ router.register(r'project-likes', views.ProjectLikeViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+    path('unlike-post/', views.UnlikePost.as_view()),
     path('validate-username/', views.ValidateUsername.as_view()),
     path('validate-email/', views.ValidateEmail.as_view()),
     path('validate-password/', views.ValidatePassword.as_view()),
@@ -48,5 +49,4 @@ urlpatterns = [
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

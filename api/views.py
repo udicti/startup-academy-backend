@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics, views
 from rest_framework import permissions, status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,PostLikeSerializer, ProjectLikeSerializer, \
      UserProfileSerializer, MailSerializer, ChangePasswordSerializer, \
@@ -19,6 +20,30 @@ from api.serializers import UserSerializer, GroupSerializer, ProjectSerializer,P
 from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject, PostLike, ProjectLike
 import json
 from .send_mail import send_mail
+
+class UnlikePost(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request):
+        u = User.objects.filter(username=request.data["from_user"]).first()
+        p = BlogPost.objects.filter(title=request.data["to_post"]).first()
+
+        like = PostLike.objects.filter(from_user=u, to_post=p)
+        like.delete()
+        return Response({"message":"deleted"})
+
+# image UPLOADS
+class PostPicUpload(views.APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        post = BlogPost.objects.filter(title = request.data["title"]).first()
+        serializer = BlogPostSerializer(data=request.data, instance=post)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
 
 class ValidateEmail(views.APIView):
     permission_classes = [permissions.AllowAny]
@@ -129,6 +154,7 @@ class ReviewReplyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class BlogPostViewSet(viewsets.ModelViewSet):
+    parser_classes = [MultiPartParser, FormParser]
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
     permission_classes = [permissions.IsAuthenticated]

@@ -179,7 +179,7 @@ class ReviewReplySerializer(serializers.HyperlinkedModelSerializer):
 class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 
 	comments = serializers.SerializerMethodField("get_comments_serializer")
-	author = serializers.SerializerMethodField("get_author_serializer")
+	author_info = serializers.SerializerMethodField("get_author_serializer")
 	likes = serializers.SerializerMethodField("get_likes_serializer")
 
 	class Meta:
@@ -190,6 +190,7 @@ class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 			'body':{'required':True},
 			'title':{'required':True},
 		}
+
 
 	def get_author_serializer(self, obj):
 		request = self.context.get('request')
