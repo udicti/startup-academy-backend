@@ -84,7 +84,7 @@ class ProjectLike(models.Model):
 
 class Review(models.Model):
 	from_user = models.ForeignKey(User, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
-	to_project = models.ForeignKey(Project, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
+	to_project = models.ForeignKey(Project, related_name='reviews', on_delete=models.CASCADE, null=False, default=1)
 	body = models.TextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 

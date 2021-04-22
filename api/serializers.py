@@ -26,7 +26,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
 		fields = ['url','username', 'first_name', 'last_name','email','last_login','date_joined','password',\
-			 'password2','groups','profile', 'projects', 'project_likes', 'post_likes']
+			 'password2','groups','profile', 'projects', 'project_likes', 'project_reviews','posts', 'post_likes']
 		extra_kwargs = {
 			'first_name':{'required':True},
 			'last_name':{'required':True},
@@ -34,7 +34,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			'password2':{'required':True},
 			'email':{'required':True},
 			'username':{'required':True},
-			'groups':{'required':True}
+			'groups':{'required':True},
+			'project_likes':{'required':False},
+			'project_reviews':{'required':False},
+			'posts':{'required':False},
+			'post_likes': {'required':False}
 		}
 
 	def validate(self, attrs):
@@ -121,6 +125,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 	owners_info = serializers.SerializerMethodField("get_owners_info_serializer")
 	creator_info = serializers.SerializerMethodField("get_creator_info_serializer")
 	likes = serializers.SerializerMethodField("get_likes_serializer")
+	reviews = serializers.SerializerMethodField("get_reviews_serializer")
 
 	class Meta:
 		model = Project
@@ -154,7 +159,18 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 		data = [UserSerializer(user, context = serializer_context).data for user in users ]
 		return data
 
+	def get_reviews_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		reviews = obj.reviews.all()
+		data = [ReviewSerializer(review, context = serializer_context).data for review in reviews ]
+		return data
+		
+
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
+
+	review_replies = serializers.SerializerMethodField("get_review_replies_serializer")
+	reviewer_info = serializers.SerializerMethodField("get_reviewer_info_serializer")
 
 	class Meta:
 		model = Review
@@ -165,7 +181,23 @@ class ReviewSerializer(serializers.HyperlinkedModelSerializer):
 			'body':{'required':True},
 		}
 
+
+	def get_review_replies_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		reviews = obj.review_replies.all()
+		data = [ReviewReplySerializer(review, context = serializer_context).data for review in reviews]
+		return data
+
+	def get_reviewer_info_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		reviewer = obj.from_user
+		data = UserSerializer(reviewer, context = serializer_context).data
+		return data
+
 class ReviewReplySerializer(serializers.HyperlinkedModelSerializer):
+	replier_info = serializers.SerializerMethodField("get_replier_info_serializer")
 
 	class Meta:
 		model = ReviewReply
@@ -175,6 +207,13 @@ class ReviewReplySerializer(serializers.HyperlinkedModelSerializer):
 			'from_user':{'required':True},
 			'body':{'required':True},
 		}
+
+	def get_replier_info_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		replier = obj.from_user
+		data = UserSerializer(replier, context = serializer_context).data
+		return data
 
 class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -215,10 +254,11 @@ class BlogPostSerializer(serializers.HyperlinkedModelSerializer):
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
 	comment_replies = serializers.SerializerMethodField("get_commentreplies_serializer")
+	commentor_info = serializers.SerializerMethodField("get_commentor_info_serializer")
 
 	class Meta:
 		model = Comment
-		fields = ['url', 'to_post', 'from_user', 'body', 'comment_replies']
+		fields = '__all__'
 		extra_kwargs = {
 			'to_post':{'required':True},
 			'from_user':{'required':True},
@@ -232,7 +272,17 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 		data = [CommentReplySerializer(comment, context = serializer_context).data for comment in comments]
 		return data
 
+	def get_commentor_info_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		commentor = obj.from_user
+		data = UserSerializer(commentor, context = serializer_context).data
+		return data
+
 class CommentReplySerializer(serializers.HyperlinkedModelSerializer):
+
+	replier_info = serializers.SerializerMethodField("get_replier_info_serializer")
+
 
 	class Meta:
 		model = CommentReply
@@ -242,6 +292,13 @@ class CommentReplySerializer(serializers.HyperlinkedModelSerializer):
 			'from_user':{'required':True},
 			'body':{'required':True},
 		}
+
+	def get_replier_info_serializer(self, obj):
+		request = self.context.get('request')
+		serializer_context = {'request':request}
+		replier = obj.from_user
+		data = UserSerializer(replier, context = serializer_context).data
+		return data
 
 class MailSerializer(serializers.HyperlinkedModelSerializer):
 
