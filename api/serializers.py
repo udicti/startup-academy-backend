@@ -57,7 +57,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			)
 		user.groups.set(validated_data['groups'])
 		user.set_password(validated_data['password'])
-		user.is_active = True
+		user.is_active = False
 		data = {}
 		current_site = Site.objects.get_current()
 		email_subject = 'Activate Your Account'
