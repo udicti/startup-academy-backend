@@ -58,19 +58,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		user.groups.set(validated_data['groups'])
 		user.set_password(validated_data['password'])
 		user.is_active = True
-		# data = {}
-		# current_site = Site.objects.get_current()
-		# email_subject = 'Activate Your Account'
-		# message = render_to_string('activate_account.html', {
-		# 	'user': user,
-		# 	'domain': current_site.domain,
-		# 	'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-		# 	'token': account_activation_token.make_token(user),
-		# 	})
-		# data["email-subject"] = email_subject
-		# data["email-receiver"] = validated_data['email']
-		# data["email-body"] = message
-		# send_mail(data)
+		data = {}
+		current_site = Site.objects.get_current()
+		email_subject = 'Activate Your Account'
+		message = render_to_string('activate_account.html', {
+			'user': user,
+			'domain': current_site.domain,
+			'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+			'token': account_activation_token.make_token(user),
+			})
+		data["email-subject"] = email_subject
+		data["email-receiver"] = validated_data['email']
+		data["email-body"] = message
+		send_mail(data)
 		user.save()
 		return user
 
@@ -309,7 +309,7 @@ class MailSerializer(serializers.HyperlinkedModelSerializer):
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = ["url", 'name']
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
