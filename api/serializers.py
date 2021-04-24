@@ -25,7 +25,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ['url','username','is_active' 'first_name', 'last_name','email','last_login','date_joined','password',\
+		fields = ['url','username','is_active', 'first_name', 'last_name','email','last_login','date_joined','password',\
 			 'password2','groups','profile', 'projects', 'project_likes', 'project_reviews','posts', 'post_likes']
 		extra_kwargs = {
 			'first_name':{'required':True},
