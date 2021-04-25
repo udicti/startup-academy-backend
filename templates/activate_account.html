@@ -1,6 +1,6 @@
 {% autoescape off %}
 Hi {{ user.username }},
-<h1 style="font-size:24px; ">Please click on the link to confirm your registration,</h1>
+Please click on the link to confirm your registration,
 
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 {% endautoescape %}
