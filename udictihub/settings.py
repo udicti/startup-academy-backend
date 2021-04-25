@@ -81,11 +81,12 @@ DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
-ALLOWED_HOSTS = ["http://127.0.0.1:4200"]
+ALLOWED_HOSTS = ["http://127.0.0.1:4200",'udictihub.tk']
 
 CORS_ALLOWED_ORIGINS = [
        'http://localhost:4200',
        'http://127.0.0.1:4200',
+       'udictihub.tk'
 ]
 
 # Password validation
@@ -143,7 +144,7 @@ LOGOUT_URL = 'rest_framework:logout'
 
 
 STATIC_URL = '/static/'
-STATICFILES_URL = os.path.join(BASE_DIR, 'static') 
+STATICFILES_URL = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
