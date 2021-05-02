@@ -154,7 +154,7 @@ class ReviewReplyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class BlogPostViewSet(viewsets.ModelViewSet):
-    parser_classes = [MultiPartParser, FormParser]
+    # parser_classes = [MultiPartParser, FormParser]
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
     permission_classes = [permissions.IsAuthenticated]
