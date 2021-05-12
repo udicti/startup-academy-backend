@@ -37,7 +37,8 @@ STUDY_PERIODS = [(3,"Three"),(4,"Four")]
 
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE, blank=False, default=1)
-	profile_pic = models.ImageField(upload_to='profile_pics', null=True)
+	# profile_pic = models.ImageField(upload_to='profile_pics', null=True)
+	profile_pic = models.TextField(blank=True, null=True)
 	bio = models.TextField(max_length=5000)
 	mobile = models.CharField(max_length=10, blank = True)
 	university = models.CharField(max_length=255, blank = True)
@@ -56,8 +57,10 @@ class UserProfile(models.Model):
 class Project(models.Model):
 	owners = models.ManyToManyField(User,related_name='owned_projects')
 	created_by = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE)
-	project_pic = models.ImageField(upload_to='project_pics/avatar', blank=True)
-	project_cover = models.ImageField(upload_to='project_pics/cover', blank=True)
+	# project_pic = models.ImageField(upload_to='project_pics/avatar', blank=True)
+	# project_cover = models.ImageField(upload_to='project_pics/cover', blank=True)
+	project_pic = models.TextField(blank=True, null=True)
+	project_cover = models.TextField(blank=True, null=True)
 	title = models.CharField(max_length=255, null=False, unique=True, default='A Project title')
 	bussiness_idea = models.TextField(blank=True)
 	problem_solved = models.TextField(blank=True)
@@ -94,12 +97,12 @@ class ReviewReply(models.Model):
 	body = models.TextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 
-
 # Blog post ang commenting system
 
 class BlogPost(models.Model):
 	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
-	image = models.ImageField(upload_to='blog_pics', null=True)
+	# image = models.ImageField(upload_to='blog_pics', null=True)
+	image = models.TextField(blank=True, null=True)
 	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
 	body = models.TextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
