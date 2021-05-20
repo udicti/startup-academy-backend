@@ -21,6 +21,7 @@ from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, 
 import json
 from .send_mail import send_mail
 
+
 class UnlikePost(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
@@ -75,6 +76,16 @@ class ValidatePassword(views.APIView):
         except:
             return Response({"message":"weak"})
         return Response({"message":"strong"})
+
+class ListPosts(generics.ListAPIView):
+    queryset = BlogPost.objects.all()
+    serializer_class = BlogPostSerializer
+    permission_classes = [permissions.AllowAny]
+
+class ListProjects(generics.ListAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [permissions.AllowAny]
 
 class CreateUser(generics.CreateAPIView):
     queryset = User.objects.all()

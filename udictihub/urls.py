@@ -29,6 +29,10 @@ router.register(r'project-likes', views.ProjectLikeViewSet)
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
+
+    path('list-posts/', views.ListPosts.as_view()),
+    path('list-projects/', views.ListProjects.as_view()),
+
     path('unlike-post/', views.UnlikePost.as_view()),
     path('validate-username/', views.ValidateUsername.as_view()),
     path('validate-email/', views.ValidateEmail.as_view()),
