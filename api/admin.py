@@ -3,6 +3,7 @@ from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, 
 from django.utils.http import urlencode
 from django.utils.html import format_html
 from django.urls import reverse
+from django.contrib.sites.models import Site
 
 # admin.site.register([UserProfile, Project])
 
@@ -23,7 +24,9 @@ class MailAdmin(admin.ModelAdmin):
     list_display = ('email_subject','to_all','sent','send_email_link')
 
     def send_email_link(self, obj):
-        url = "http://127.0.0.1:8000/"+str(obj.id)+"/send_email/"
+        current_site = Site.objects.get_current()
+
+        url = "http://{}".format(current_site.domain)+str(obj.id)+"/send_email/"
         if obj.sent == False:
             return format_html('<a href="{}">send email</a>', url)
         return  format_html('<label>sent</label>', url)
