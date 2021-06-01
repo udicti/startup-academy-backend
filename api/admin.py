@@ -26,7 +26,7 @@ class MailAdmin(admin.ModelAdmin):
     def send_email_link(self, obj):
         current_site = Site.objects.get_current()
 
-        url = "http://{}".format(current_site.domain)+str(obj.id)+"/send_email/"
+        url = "http://{}/".format(current_site.domain)+str(obj.id)+"/send_email/"
         if obj.sent == False:
             return format_html('<a href="{}">send email</a>', url)
         return  format_html('<label>sent</label>', url)
