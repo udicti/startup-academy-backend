@@ -31,16 +31,13 @@ class ApplicationQuestion(models.Model):
     def __str__(self):
         return f'{self.statement}'
 
-class Applicant(AbstractUser):
-	last_login = None
-	username = None
-	password = None
-	user_permissions = None
-	groups = None
-	is_active = None
-	is_staff = None
-	is_superuser = None
-	mobile = models.CharField(max_length=255)
+class Applicant(models.Model):
+	application_window = models.ForeignKey(ApplicationWindow, related_name="applicants", on_delete=models.CASCADE)
+	first_name = models.CharField(max_length=50)
+	last_name = models.CharField(max_length=50)
+	email = models.EmailField()
+	mobile = models.CharField(max_length=50)
+	date_created = models.DateField(auto_now_add=True)
 	GENDER_CHOICES = (
 		('M', 'Male'),
 		('F', 'Female'),
@@ -50,7 +47,6 @@ class Applicant(AbstractUser):
 	degree_program = models.CharField(max_length=255)
 	is_selected = models.BooleanField(default=False)
 	is_unselected = models.BooleanField(default = False)
-	application_window = models.ForeignKey(ApplicationWindow, related_name="applicants", on_delete=models.CASCADE)
 
 	def __str__(self):
 		return f'{self.email}'

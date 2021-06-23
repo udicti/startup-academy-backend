@@ -22,22 +22,17 @@ class ApplicantSerializer(serializers.HyperlinkedModelSerializer):
 		read_only_fields=('is_selected','is_unselected','date_joined')
 
 	def create(self, validated_data):
-		user = User.objects.create(
-			email=validated_data['email'],
-			first_name=validated_data['first_name'],
-			last_name=validated_data['last_name'],
-			)
-			
-		email_subject = 'Activate Your Account'
+		applicant = Applicant.objects.create(**validated_data)
+		
+		data = {}
+		email_subject = 'UDCTIHub Application'
 		message = "Congratulations, you have successfully applied"
 		data["email-subject"] = email_subject
 		data["email-receiver"] = validated_data['email']
 		data["email-body"] = message
 		send_mail(data)
-		user.save()
-		return user
-
-
+		
+		return applicant
 
 class ApplicationWindowSerializer(serializers.HyperlinkedModelSerializer):
 	questions = serializers.SerializerMethodField("get_questions")
