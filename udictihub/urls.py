@@ -4,6 +4,7 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from api import views
+from applications import views as apl_views
 from django.conf.urls.static import static
 from django.conf.urls import url
 from django.conf import settings
@@ -51,6 +52,8 @@ urlpatterns = [
         views.activate_account, name='activate'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('applications/', include('applications.urls'))
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,8 @@
 
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, AbstractUser
 from django.core.exceptions import ValidationError
+from django.db.models.fields import related
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -10,6 +11,7 @@ from datetime import datetime
 from django.utils import timezone
 from .send_mail import send_mail
 from django.contrib.sites.models import Site
+from ckeditor.fields  import RichTextField
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
@@ -38,7 +40,7 @@ STUDY_PERIODS = [(3,"Three"),(4,"Four")]
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE, blank=False, default=1)
 	# profile_pic = models.ImageField(upload_to='profile_pics', null=True)
-	profile_pic = models.TextField(blank=True, null=True)
+	profile_pic = models.URLField(blank=True, null=True)
 	bio = models.TextField(max_length=5000)
 	mobile = models.CharField(max_length=10, blank = True)
 	university = models.CharField(max_length=255, blank = True)
@@ -59,13 +61,13 @@ class Project(models.Model):
 	created_by = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE)
 	# project_pic = models.ImageField(upload_to='project_pics/avatar', blank=True)
 	# project_cover = models.ImageField(upload_to='project_pics/cover', blank=True)
-	project_pic = models.TextField(blank=True, null=True)
-	project_cover = models.TextField(blank=True, null=True)
+	project_pic = models.URLField(blank=True, null=True)
+	project_cover = models.URLField(blank=True, null=True)
 	title = models.CharField(max_length=255, null=False, unique=True, default='A Project title')
-	bussiness_idea = models.TextField(blank=True)
-	problem_solved = models.TextField(blank=True)
-	value_it_brings = models.TextField(blank=True)
-	to_whom = models.TextField(blank=True)
+	bussiness_idea = RichTextField(blank=True)
+	problem_solved = RichTextField(blank=True)
+	value_it_brings = RichTextField(blank=True)
+	to_whom = RichTextField(blank=True)
 	is_profitable = models.BooleanField(default = False)
 	members_in_udsm = models.BooleanField(default = False)
 	date_created = models.DateField(auto_now_add=True)
@@ -88,13 +90,13 @@ class ProjectLike(models.Model):
 class Review(models.Model):
 	from_user = models.ForeignKey(User, related_name='project_reviews', on_delete=models.CASCADE, null=False, default=1)
 	to_project = models.ForeignKey(Project, related_name='reviews', on_delete=models.CASCADE, null=False, default=1)
-	body = models.TextField(blank=True)
+	body = RichTextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 
 class ReviewReply(models.Model):
 	from_user = models.ForeignKey(User, related_name='review_replies', on_delete=models.CASCADE, null=False, default=1)
 	to_review = models.ForeignKey(Review, related_name='review_replies', on_delete=models.CASCADE, null=False, default=1)
-	body = models.TextField(blank=True)
+	body = RichTextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 
 # Blog post ang commenting system
@@ -102,9 +104,9 @@ class ReviewReply(models.Model):
 class BlogPost(models.Model):
 	title = models.CharField(max_length=255, null=False, unique=True, default='A title')
 	# image = models.ImageField(upload_to='blog_pics', null=True)
-	image = models.TextField(blank=True, null=True)
+	image = models.URLField(blank=True, null=True)
 	author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
-	body = models.TextField(blank=True)
+	body = RichTextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 	published = models.BooleanField(blank=True, default = False)
 
@@ -116,21 +118,27 @@ class PostLike(models.Model):
 class Comment(models.Model):
 	from_user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE, null=False, default=1)
 	to_post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE, null=False, default=1)
-	body = models.TextField(blank=True)
+	body = RichTextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 
 class CommentReply(models.Model):
 	from_user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE, null=False, default=1)
 	to_comment = models.ForeignKey(Comment, related_name='comment_replies', on_delete=models.CASCADE, null=False, default=1)
-	body = models.TextField(blank=True)
+	body = RichTextField(blank=True)
 	date_created = models.DateField(auto_now_add=True)
 
 # Mails System
 
 class Mail(models.Model):
-	to = models.ManyToManyField(User,related_name='mails', blank=True)
+	to = models.ManyToManyField(User,related_name='mails', verbose_name="recepient", blank=True)
 	to_all = models.BooleanField(blank=True, default = False)
 	email_subject = models.CharField(max_length=255, null=False, unique=False, default='Udicti')
-	email_body = models.TextField(blank=False)
+	email_body = RichTextField(blank=False)
 	date_created = models.DateField(auto_now_add=True)
 	sent = models.BooleanField(blank=True, default = False)
+
+
+
+
+
+

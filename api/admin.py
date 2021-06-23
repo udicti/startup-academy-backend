@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Project, Mail, BlogPost, Comment, ReviewReply, CommentReply, Review, TopProject, PostLike, ProjectLike
+from .models import *
 from django.utils.http import urlencode
 from django.utils.html import format_html
 from django.urls import reverse
@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    filter_horizontal = ('owners',)
     list_display = ('created_by', 'title')
 
 @admin.register(TopProject)
@@ -21,7 +22,9 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Mail)
 class MailAdmin(admin.ModelAdmin):
+    filter_horizontal = ('to',)
     list_display = ('email_subject','to_all','sent','send_email_link')
+    search_fields = ['to__username']
 
     def send_email_link(self, obj):
         current_site = Site.objects.get_current()
@@ -59,6 +62,6 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('from_user', 'to_post')
 
 @admin.register(CommentReply)
-class CoommentReviewAdmin(admin.ModelAdmin):
+class CommentReviewAdmin(admin.ModelAdmin):
     list_display = ('from_user', 'to_comment')
 
