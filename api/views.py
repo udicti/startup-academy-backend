@@ -189,9 +189,7 @@ def send_email(request, id):
     all_emails = [i.email for i in User.objects.all().filter(is_staff = False)]
     mail = Mail.objects.get(id = id)
     if mail:
-        body = render_to_string('email.html', {
-			'body': mail.email_body
-			})
+        body = mail.email_body
         email = {
             "email-subject":mail.email_subject,
             "email-body":body
