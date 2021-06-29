@@ -45,6 +45,7 @@ class QuestionInline(admin.StackedInline):
 class ApplicantsInline(admin.StackedInline):
 
     model = Applicant
+    list_filter = [SelectedListFilter]
     fields = ('degree_program', 'university')
     readonly_fields =('degree_program', 'university')
     classes = ['collapse',]
@@ -81,6 +82,7 @@ class AnswerInline(admin.StackedInline):
 @admin.register(Applicant)
 class ApplicantWindowAdmin(admin.ModelAdmin):
     list_display = ('email', 'university')
+    search_fields = ['email','first_name','last_name']
     list_filter = [SelectedListFilter]
     fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected')
     readonly_fields = ('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window')
