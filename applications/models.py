@@ -15,7 +15,7 @@ from ckeditor.fields  import RichTextField
 
 
 class ApplicationWindow(models.Model):
-	open = models.BooleanField(default = False)
+	open = models.BooleanField(default=False)
 	description = models.TextField()
 	date_created = models.DateField(auto_now_add=True)
 	starts = models.DateField(auto_now_add=False)
@@ -24,12 +24,14 @@ class ApplicationWindow(models.Model):
 	def __str__(self):
 		return f'{self.description}'
 
+
 class ApplicationQuestion(models.Model):
     statement = models.CharField(max_length=225)
     application_window = models.ForeignKey(ApplicationWindow, verbose_name='application_window', related_name='questions', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.statement}'
+
 
 class Applicant(models.Model):
 	application_window = models.ForeignKey(ApplicationWindow, related_name="applicants", on_delete=models.CASCADE)
@@ -42,17 +44,42 @@ class Applicant(models.Model):
 		('M', 'Male'),
 		('F', 'Female'),
 	)
+	year_of_study = models.IntegerField(null=True, blank=True)
+	reg_no = models.CharField(max_length=50, null=True, blank=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
 	university = models.CharField(max_length=255)
 	degree_program = models.CharField(max_length=255)
 	is_selected = models.BooleanField(default=False)
-	is_unselected = models.BooleanField(default = False)
+	is_unselected = models.BooleanField(default=False)
 
 	def __str__(self):
 		return f'{self.email}'
 
 	class Meta:
 		verbose_name = "Applicant"
+
+	def save(self, *args, **kwargs):
+		email = {
+            "email-subject":'',
+            "email-body":'',
+			"email-receiver":self.email
+        }
+
+		if self.is_selected == True:
+			email['email-body'] = "you are selected"
+			email['email-subject'] = "Pt selection Results"
+			res = send_mail(email).reason
+			if res == "OK":
+				print('sent')
+		elif self.is_unselected == True:
+			email['email-body'] = "you are not selected"
+			email['email-subject'] = "Pt selection Results"
+			res = send_mail(email).reason
+			if res == "OK":
+				print('sent')
+				
+		super().save(*args, **kwargs) 
+
 
 class Answer(models.Model):
 	statement = RichTextField()

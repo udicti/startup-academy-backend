@@ -6,18 +6,60 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.contrib.sites.models import Site
 
+
+class SelectedListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('status')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'selection'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('selected', ('selected')),
+            ('unselected', ('not selected')),
+        )
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        if self.value() == 'selected':
+            return queryset.filter(is_selected = True)
+        if self.value() == 'unselected':
+            return queryset.filter(is_unselected = True )
+
+
+
 class QuestionInline(admin.StackedInline):
 
     model = ApplicationQuestion
+    classes = ['collapse',]
     extra = 0
 
+class ApplicantsInline(admin.StackedInline):
+
+    model = Applicant
+    fields = ('degree_program', 'university')
+    readonly_fields =('degree_program', 'university')
+    classes = ['collapse',]
+    can_delete = False
+    show_change_link = True
+    extra = 0
 
 @admin.register(ApplicationWindow)
 class ApplicationWindowAdmin(admin.ModelAdmin):
-    list_display = ('open', 'starts', 'ends', 'date_created')
+    save_on_top = True
+    list_display = ('description', 'open', 'date_created')
     fields = ('description', 'starts', 'ends', 'open')
     inlines = [
-        QuestionInline
+        QuestionInline,
+        ApplicantsInline
     ]
 
 # @admin.register(ApplicationQuestion)
@@ -39,8 +81,9 @@ class AnswerInline(admin.StackedInline):
 @admin.register(Applicant)
 class ApplicantWindowAdmin(admin.ModelAdmin):
     list_display = ('email', 'university')
-    fields=('first_name','last_name','email','mobile','gender','university','degree_program','application_window','is_selected','is_unselected')
-    readonly_fields = ('first_name','last_name','email','mobile','gender','university','degree_program','application_window')
+    list_filter = [SelectedListFilter]
+    fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected')
+    readonly_fields = ('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window')
     inlines = [
         AnswerInline,
     ]
@@ -53,6 +96,9 @@ class ApplicantWindowAdmin(admin.ModelAdmin):
                 'css/admin.css',
             )
         }
+
+
+   
 
 # @admin.register(Answer)
 # class AnswerAdmin(admin.ModelAdmin):
