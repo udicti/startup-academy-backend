@@ -8,6 +8,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from api.token_generator import account_activation_token
 from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from django.contrib.sites.shortcuts import get_current_site
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics, views
@@ -19,7 +22,14 @@ from .models import *
 import json
 from .send_mail import send_mail
 
-class applicant(generics.CreateAPIView):
+def editReg(request, uidb64):
+    uid = force_bytes(urlsafe_base64_decode(uidb64))
+    user = User.objects.get(pk=uid)
+    if request.method == "POST":
+        pass
+    return render(request, "editReg.html")
+
+class applicant(generics.CreateAPIView, generics.UpdateAPIView, generics.ListAPIView):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
     permission_classes = [permissions.AllowAny]

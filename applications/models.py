@@ -12,6 +12,9 @@ from django.utils import timezone
 from .send_mail import send_mail
 from django.contrib.sites.models import Site
 from ckeditor.fields  import RichTextField
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class ApplicationWindow(models.Model):
@@ -66,7 +69,8 @@ class Applicant(models.Model):
         }
 
 		if self.is_selected == True:
-			email['email-body'] = "you are selected"
+			current_site = Site.objects.get_current()
+			email['email-body'] = "you are selected visit <a href='http://{}/applicants/update-reg/{}'></a> to finish your registration.".format(current_site.domain, urlsafe_base64_encode(force_bytes(self.pk)))
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason
 			if res == "OK":
@@ -77,7 +81,7 @@ class Applicant(models.Model):
 			res = send_mail(email).reason
 			if res == "OK":
 				print('sent')
-				
+
 		super().save(*args, **kwargs) 
 
 

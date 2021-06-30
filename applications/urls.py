@@ -22,6 +22,6 @@ urlpatterns = [
     path('applicant/', views.applicant.as_view()),
     path('answers/', views.answers.as_view()),
     path('windows/', views.windows.as_view()),
-
+    path('update-reg/<uidb64>', views.editReg, name = "editReg"),
 ]
 
