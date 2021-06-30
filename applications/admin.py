@@ -34,7 +34,29 @@ class SelectedListFilter(admin.SimpleListFilter):
         if self.value() == 'unselected':
             return queryset.filter(is_unselected = True )
 
+class WindowListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('window')
 
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'window'
+
+    def lookups(self, request, model_admin):
+        winds = ApplicationWindow.objects.all()
+
+        dt = []
+        for i in winds:
+            dt.append((i.id, (i.description)))
+
+        print(tuple(dt))
+        print("empty\n")
+        return tuple(dt)
+
+    def queryset(self, request, queryset):
+        
+        if self.value():
+            return queryset.filter(application_window = ApplicationWindow.objects.filter(id=self.value()).first())
 
 class QuestionInline(admin.StackedInline):
 
@@ -45,7 +67,6 @@ class QuestionInline(admin.StackedInline):
 class ApplicantsInline(admin.StackedInline):
 
     model = Applicant
-    list_filter = [SelectedListFilter]
     fields = ('degree_program', 'university')
     readonly_fields =('degree_program', 'university')
     classes = ['collapse',]
@@ -83,7 +104,7 @@ class AnswerInline(admin.StackedInline):
 class ApplicantWindowAdmin(admin.ModelAdmin):
     list_display = ('email', 'university')
     search_fields = ['email','first_name','last_name']
-    list_filter = [SelectedListFilter]
+    list_filter = [WindowListFilter, SelectedListFilter]
     fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected')
     readonly_fields = ('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window')
     inlines = [
