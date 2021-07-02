@@ -34,8 +34,8 @@ def editReg(request, uidb64):
                     user.reg_no = request.form['reg_no']
                     user.year_of_study = request.form['year_of_study']
                     user.save()
-        return render(request, "editReg.html",user=user)
-    return HttpResponse("<h1>Err. Failed to rocognize user</h1>")
+        return render(request, "editReg.html",{user:user})
+    return HttpResponse("<h1>Err. Failed to recognize user</h1>")
 
 class applicant(generics.CreateAPIView, generics.UpdateAPIView, generics.ListAPIView):
     queryset = Applicant.objects.all()
