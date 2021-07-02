@@ -15,6 +15,8 @@ from ckeditor.fields  import RichTextField
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.html import format_html
+
 
 
 class ApplicationWindow(models.Model):
@@ -70,7 +72,8 @@ class Applicant(models.Model):
 
 		if self.is_selected == True:
 			current_site = Site.objects.get_current()
-			email['email-body'] = "you are selected visit <a href='http://{}/applicants/update-reg/{}'></a> to finish your registration.".format(current_site.domain, urlsafe_base64_encode(force_bytes(self.pk)))
+			link = format_html("<a href='{}/applicants/update-reg/{}'>click link</a>",current_site.domain,urlsafe_base64_encode(force_bytes(self.pk)))
+			email['email-body'] = f'you are selected visit {link} to finish your registration.'
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason
 			if res == "OK":
