@@ -24,16 +24,18 @@ from .send_mail import send_mail
 def editReg(request, uidb64):
     uid = force_bytes(urlsafe_base64_decode(uidb64))
     user = Applicant.objects.get(pk=uid)
-    if request.method == "POST":
-        if user:
-            print(user)
+    if user:
+        print(user)
+
+        if request.method == "POST":
             if user.reg_no == "" and user.year_of_study == "":
                 print(user.email)
                 if request.form['reg_no'] and request.form['year_of_study']:
                     user.reg_no = request.form['reg_no']
                     user.year_of_study = request.form['year_of_study']
                     user.save()
-    return render(request, "editReg.html")
+        return render(request, "editReg.html",user=user)
+    return HttpResponse("<h1>Err. Failed to rocognize user</h1>")
 
 class applicant(generics.CreateAPIView, generics.UpdateAPIView, generics.ListAPIView):
     queryset = Applicant.objects.all()
