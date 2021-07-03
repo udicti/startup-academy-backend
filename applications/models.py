@@ -71,7 +71,7 @@ class Applicant(models.Model):
 			"email-receiver":self.email
         }
 
-		if self.is_selected == True:
+		if (self.is_selected == True) and (self.send_email == True):
 			current_site = Site.objects.get_current()
 			link = format_html("<a href='{}/applications/update-reg/{}'>click link</a>",current_site.domain,urlsafe_base64_encode(force_bytes(self.pk)))
 			email['email-body'] = f'you are selected visit {link} to finish your registration.'
@@ -79,7 +79,7 @@ class Applicant(models.Model):
 			res = send_mail(email).reason
 			if res == "OK":
 				print('sent')
-		elif self.is_unselected == True:
+		elif (self.is_unselected == True) and (self.send_email == True):
 			email['email-body'] = "you are not selected"
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason

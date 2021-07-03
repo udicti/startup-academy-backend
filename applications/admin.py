@@ -105,7 +105,7 @@ class ApplicantWindowAdmin(admin.ModelAdmin):
     list_display = ('email', 'university')
     search_fields = ['email','first_name','last_name']
     list_filter = [WindowListFilter, SelectedListFilter]
-    fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected')
+    fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected', 'send_email')
     readonly_fields = ('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window')
     inlines = [
         AnswerInline,
