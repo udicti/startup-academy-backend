@@ -24,23 +24,32 @@ from django.views.decorators.csrf import csrf_protect
 
 @csrf_protect
 def editReg(request, uidb64):
-    uid = force_bytes(urlsafe_base64_decode(uidb64))
-    user = Applicant.objects.get(pk=uid)
-    action = f"/applications/update-reg/{uidb64}"
-    if user:
-        # print(user)
+    try:
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+        action = f"/applications/update-reg/{uidb64}"
+        if Applicant.objects.get(pk=uid):
+            user = Applicant.objects.get(pk=uid)
+            # print(user)
 
-        if request.method == "POST":
-            if user.reg_no == "" and user.year_of_study == "":
-                print(user.email)
-                if request.form['reg_no'] and request.form['year_of_study']:
-                    print(request.form['reg_no']) 
-                    print(request.form['year_of_study'])
-                    user.reg_no = request.form['reg_no']
-                    user.year_of_study = request.form['year_of_study']
-                    user.save()
-        return render(request, "editReg.html",{'user':user, 'action':action})
-    return HttpResponse("<h1>Err. Failed to recognize user</h1>")
+            if request.method == "POST":
+                print(request.POST)
+                print(user.reg_no, user.year_of_study)
+                if (user.reg_no == None) and (user.year_of_study == None):
+                    print(user.email)
+                    if request.POST:
+                        print(request.POST['reg_no']) 
+                        print(request.POST['year_of_study'])
+                        user.reg_no = request.POST['reg_no']
+                        user.year_of_study = request.POST['year_of_study']
+                        user.save()
+                    return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':True})
+
+                return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
+            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
+    except:
+        return render(request, "editReg.html",{'user':None, 'action':None, 'changed':False, 'no_user':True})
+        
+
 
 class applicant(generics.CreateAPIView, generics.UpdateAPIView, generics.ListAPIView):
     queryset = Applicant.objects.all()

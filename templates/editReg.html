@@ -65,7 +65,16 @@
 <body class="text-center">
     <div class="form-signin bg-light">
         {% load static %}
-        <form action="{{action}}" method="post">
+        {% if no_user %}
+            <div class="alert alert-danger p-3"> 
+                <h2>User not found</h2>
+            </div>        
+        {% elif changed %}
+            <div class="alert alert-info p-3"> 
+                <h2>User details already added</h2>
+            </div>        
+        {% elif not changed and not no_user%}
+<form action="{{action}}" method="post">
             {% csrf_token %}
             <img class="mb-4" src="{% static 'img/logo.png'%}" alt="" width="72">
             <h1 class="h4 mb-3 fw-normal">Please Fill in your Registration Number and Year Of Study</h1>
@@ -90,6 +99,13 @@
             <button style="box-shadow:inset 0px 0px 2px;" class="w-100 btn btn-lg btn-dark" type="submit">Submit</button>
             <p class="mt-5 mb-3 text-muted">&copy; UdictiHub 2021</p>
         </form>
+        {% else %}
+            <div class="alert alert-danger p-3"> 
+                <h2>Failed to load user</h2>
+            </div>        
+        {% endif %}
+
+        
     </div>
 
 
