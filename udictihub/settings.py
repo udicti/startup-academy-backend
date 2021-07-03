@@ -163,7 +163,7 @@ LOGOUT_URL = 'rest_framework:logout'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    '/applications/static/',
+    BASE_DIR / "applications/static/",
 ]
 STATICFILES_URL = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
