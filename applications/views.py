@@ -41,6 +41,7 @@ def editReg(request, uidb64):
                         print(request.POST['year_of_study'])
                         user.reg_no = request.POST['reg_no']
                         user.year_of_study = request.POST['year_of_study']
+                        user.send_email = False
                         user.save()
                         return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'success':True, 'no_user':False})
 
