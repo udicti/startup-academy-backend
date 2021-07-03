@@ -20,21 +20,26 @@ from .serializers import *
 from .models import *
 import json
 from .send_mail import send_mail
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
 def editReg(request, uidb64):
     uid = force_bytes(urlsafe_base64_decode(uidb64))
     user = Applicant.objects.get(pk=uid)
+    action = f"/applications/update-reg/{uidb64}"
     if user:
-        print(user)
+        # print(user)
 
         if request.method == "POST":
             if user.reg_no == "" and user.year_of_study == "":
                 print(user.email)
                 if request.form['reg_no'] and request.form['year_of_study']:
+                    print(request.form['reg_no']) 
+                    print(request.form['year_of_study'])
                     user.reg_no = request.form['reg_no']
                     user.year_of_study = request.form['year_of_study']
                     user.save()
-        return render(request, "editReg.html",{user:user})
+        return render(request, "editReg.html",{'user':user, 'action':action})
     return HttpResponse("<h1>Err. Failed to recognize user</h1>")
 
 class applicant(generics.CreateAPIView, generics.UpdateAPIView, generics.ListAPIView):
