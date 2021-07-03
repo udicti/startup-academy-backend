@@ -42,10 +42,10 @@ def editReg(request, uidb64):
                         user.reg_no = request.POST['reg_no']
                         user.year_of_study = request.POST['year_of_study']
                         user.save()
-                    return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':True})
+                        return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'success':True, 'no_user':False})
 
                 return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
-            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
+            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':False, 'no_user':False})
     except:
         return render(request, "editReg.html",{'user':None, 'action':None, 'changed':False, 'no_user':True})
         

@@ -72,6 +72,10 @@
         {% elif changed %}
             <div class="alert alert-info p-3"> 
                 <h2>User details already added</h2>
+            </div>  
+        {% elif changed and success%}
+            <div class="alert alert-info p-3"> 
+                <h2> Details added succesfully</h2>
             </div>        
         {% elif not changed and not no_user%}
 <form action="{{action}}" method="post">
