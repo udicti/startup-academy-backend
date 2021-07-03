@@ -31,7 +31,7 @@ def editReg(request, uidb64):
             user = Applicant.objects.get(pk=uid)
             # print(user)
 
-            if (user.reg_no == None) and (user.year_of_study == None):
+            if ((user.reg_no == None) or (user.reg_no == "")) and (user.year_of_study == None):
                 print(user.email)
                 if request.method == "POST":
                     if request.POST:
