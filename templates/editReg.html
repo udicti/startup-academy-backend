@@ -69,7 +69,7 @@
             <div class="alert alert-danger p-3"> 
                 <h2>User not found</h2>
             </div>        
-        {% elif changed %}
+        {% elif changed and not no_user%}
             <div class="alert alert-info p-3"> 
                 <h2>User details already added</h2>
             </div>  

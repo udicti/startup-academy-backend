@@ -31,11 +31,9 @@ def editReg(request, uidb64):
             user = Applicant.objects.get(pk=uid)
             # print(user)
 
-            if request.method == "POST":
-                print(request.POST)
-                print(user.reg_no, user.year_of_study)
-                if (user.reg_no == None) and (user.year_of_study == None):
-                    print(user.email)
+            if (user.reg_no == None) and (user.year_of_study == None):
+                print(user.email)
+                if request.method == "POST":
                     if request.POST:
                         print(request.POST['reg_no']) 
                         print(request.POST['year_of_study'])
@@ -45,8 +43,8 @@ def editReg(request, uidb64):
                         user.save()
                         return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'success':True, 'no_user':False})
 
-                return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
-            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':False, 'no_user':False})
+                return render(request, "editReg.html",{'user':user, 'action':action, 'changed':False, 'no_user':False})
+            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
     except:
         return render(request, "editReg.html",{'user':None, 'action':None, 'changed':False, 'no_user':True})
         
