@@ -33,6 +33,7 @@ class SelectedListFilter(admin.SimpleListFilter):
             return queryset.filter(is_selected = True)
         if self.value() == 'unselected':
             return queryset.filter(is_unselected = True )
+        return queryset.filter(is_unselected = False ).filter(is_selected = False)
 
 class WindowListFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the

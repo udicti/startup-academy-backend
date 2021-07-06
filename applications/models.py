@@ -96,3 +96,74 @@ class Answer(models.Model):
 	
 	def __str__(self):
 		return f'{self.id}'
+
+def send_sample_email():
+	email_address = "jackkweyunga@gmail.com"
+	link = "http://example.com"
+	email = {
+		"email-subject":'Sampling',
+		"email-body":format_html('<p>Just a sample<p><br><a href></a>', link),
+		"email-receiver":email_address
+		}
+	try:
+		s = send_mail(email)
+		if s.reason == 'OK':
+			print("sent")
+			return True
+		return False
+	except:
+		return False
+
+def list_emails():
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=1).first()).all()
+	count_emails = 0
+	store_emails = [] 
+	store_failed = [] 
+	for i in all:
+		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None):
+			store_emails.append(i.email)
+			count_emails += 1
+		else:
+			store_failed.append(i.email)
+	print(store_emails)
+	receivers = ''
+	for i in store_emails:
+		if i != "":
+			receivers += ","+i
+	if receivers[0] == ",":
+		receivers = receivers[1:]
+	return receivers
+
+def send_email_to_apps():
+
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=1).first()).all()
+	count_sent = 0
+	count_failed = 0
+	store_failed = [] 
+	for i in all:
+		email = {
+		"email-subject":'',
+		"email-body":'',
+		"email-receiver":i.email
+		}
+
+		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None):
+		# if i.email == "jackkweyunga@gmail.com":
+			current_site = Site.objects.get_current()
+			link = format_html("<a href='{}/applications/update-reg/{}'>click/Follow this link</a>",current_site.domain,urlsafe_base64_encode(force_bytes(i.pk)))
+			email['email-body'] = f'We are proud to inform you that soon we will be announcing the selected applicants for our PT program this year. You are required to provide your registration number and year of study. Follow the link provided. {link} '
+			email['email-subject'] = "Udicti PT Program 2021"
+			res = send_mail(email).reason
+			if res == "OK":
+				# print('sent')
+				count_sent += 1
+				print(count_sent)
+			else:
+				store_failed.append(i.email)
+				count_failed += 1
+
+	print("sent "+str(count_sent))
+	print("failed " +str(count_failed))
+	print(store_failed)
+
+		
