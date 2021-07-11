@@ -22,7 +22,8 @@ import json
 from .send_mail import send_mail
 from django.views.decorators.csrf import csrf_protect
 
-@csrf_protectdef editReg(request, uidb64):
+@csrf_protect
+def editReg(request, uidb64):
     ls = list_emails()
     return Response({"emails":ls})
     # try:
