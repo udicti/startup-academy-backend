@@ -103,7 +103,7 @@ class AnswerInline(admin.StackedInline):
 
 @admin.register(Applicant)
 class ApplicantWindowAdmin(admin.ModelAdmin):
-    list_display = ('email', 'university')
+    list_display = ('email', 'gender','year_of_study', 'university')
     search_fields = ['email','first_name','last_name']
     list_filter = [WindowListFilter, SelectedListFilter]
     fields=('first_name','last_name','email','mobile','gender','university','degree_program','reg_no','year_of_study','application_window','is_selected','is_unselected', 'send_email')

@@ -72,15 +72,27 @@ class Applicant(models.Model):
         }
 
 		if (self.is_selected == True) and (self.send_email == True):
-			current_site = Site.objects.get_current()
-			link = format_html("<a href='{}/applications/update-reg/{}'>click link</a>",current_site.domain,urlsafe_base64_encode(force_bytes(self.pk)))
-			email['email-body'] = f'you are selected visit {link} to finish your registration.'
+			template = format_html(
+				"<p><b>Congratulations!</b><br>You have been been selected to participate in this year's UDICTIHUB PT. We will send your name and registration number to PT coordinators soa as to conmfirm directly with PTMS.</p>"+
+				"<p>If you do not take your studies at Udsm, reachout for further measures."+
+				"<p>We are very excited to meet you, looking forward to have you next month.</p>"+
+				"<p><b>NB:</b> IF you experience any change of mind, feel free to reach us.</p>"+
+				"<p> Otherwise we wish you all the best.</p>"+
+				"<p>regards.</p>"
+				)
+			email['email-body'] = f'{template}'
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason
 			if res == "OK":
 				print('sent')
 		elif (self.is_unselected == True) and (self.send_email == True):
-			email['email-body'] = "you are not selected"
+			template = format_html(
+				"<p>Hellow!</p>"+
+				"<p>It is with heavy heart, we would like to inform you that you are not selected for the UDICTIHUB Practical Training 2021, but that does not make you a looser!</p>"+
+				"<p>Techcraft are looking for two people this PT, head up to our site and book for a chance, before the deadline</p>"
+			    "<p>regards.</p>"
+			)
+			email['email-body'] = f"{template}"
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason
 			if res == "OK":
@@ -120,12 +132,14 @@ def list_emails():
 	store_emails = [] 
 	store_failed = [] 
 	for i in all:
-		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None):
+		if i.is_unselected == True :
 			store_emails.append(i.email)
 			count_emails += 1
 		else:
 			store_failed.append(i.email)
 	print(store_emails)
+	print(len(store_emails))
+
 	receivers = ''
 	for i in store_emails:
 		if i != "":
@@ -166,4 +180,54 @@ def send_email_to_apps():
 	print("failed " +str(count_failed))
 	print(store_failed)
 
-		
+
+def send_result_email_to_apps():
+
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=1).first()).all()
+	count_sent = 0
+	# count_failed = 0
+	# store_failed = [] 
+	for i in all:
+		email = {
+		"email-subject":'',
+		"email-body":'',
+		"email-receiver":i.email
+		}
+
+		if (i.is_selected == True):
+		# if (i.is_selected == True) and (i.email == "jackkweyunga@gmail.com"):
+			template = format_html(
+				"<p><b>Congratulations!</b><br>You have been been selected to participate in this year's UDICTIHUB PT. We will send your name and registration number to PT coordinators soa as to conmfirm directly with PTMS.</p>"+
+				"<p>If you do not take your studies at Udsm, reachout for further measures."+
+				"<p>We are very excited to meet you, looking forward to have you next month.</p>"+
+				"<p><b>NB:</b> IF you experience any change of mind, feel free to reach us.</p>"+
+				"<p> Otherwise we wish you all the best.</p>"+
+				"<p>regards.</p>"
+				)
+			email['email-body'] = f'{template}'
+			email['email-subject'] = "Pt selection Results"
+			res = send_mail(email).reason
+			if res == "OK":
+				count_sent += count_sent
+				print(f"sent no: {count_sent}")
+
+
+		elif (i.is_unselected == True):
+		# if (i.is_unselected == True) and (i.email == "jackkweyunga@gmail.com"):
+			template = format_html(
+				"<p>Hellow!</p>"+
+				"<p>It is with heavy heart, we would like to inform you that you are not selected for the UDICTIHUB Practical Training 2021, but that does not make you a looser!</p>"+
+				"<p>Techcraft are looking for two people this PT, head up to our site and book for a chance, before the deadline</p>"
+			    "<p>regards.</p>"
+			)
+			email['email-body'] = f"{template}"
+			email['email-subject'] = "Pt selection Results"
+			res = send_mail(email).reason
+			if res == "OK":
+				count_sent += count_sent
+				print(f"sent no: {count_sent}")
+
+
+	print("sent "+str(count_sent))
+	# print("failed " +str(count_failed))
+	# print(store_failed)
