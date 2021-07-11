@@ -132,7 +132,7 @@ def list_emails():
 	store_emails = [] 
 	store_failed = [] 
 	for i in all:
-		if i.is_unselected == True :
+		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None) and (i.is_selected == True) :
 			store_emails.append(i.email)
 			count_emails += 1
 		else:
@@ -161,7 +161,7 @@ def send_email_to_apps():
 		"email-receiver":i.email
 		}
 
-		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None):
+		if ((i.reg_no == None) or (i.reg_no == "")) and (i.year_of_study == None) and (i.is_selected == True):
 		# if i.email == "jackkweyunga@gmail.com":
 			current_site = Site.objects.get_current()
 			link = format_html("<a href='{}/applications/update-reg/{}'>click/Follow this link</a>",current_site.domain,urlsafe_base64_encode(force_bytes(i.pk)))
