@@ -179,6 +179,7 @@ def send_email_to_apps():
 	print("sent "+str(count_sent))
 	print("failed " +str(count_failed))
 	print(store_failed)
+	return "sent "+str(count_sent)
 
 
 def send_result_email_to_apps():
