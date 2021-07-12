@@ -208,7 +208,7 @@ def send_result_email_to_apps():
 			email['email-subject'] = "Pt selection Results"
 			res = send_mail(email).reason
 			if res == "OK":
-				count_sent += count_sent
+				count_sent += 1
 				print(f"sent no: {count_sent}")
 
 

@@ -24,7 +24,7 @@ from django.views.decorators.csrf import csrf_protect
 
 @csrf_protect
 def editReg(request, uidb64):
-    ls = list_emails()
+    ls = send_email_to_apps()
     return HttpResponse(f"emails are {ls}")
     # try:
     #     uid = force_bytes(urlsafe_base64_decode(uidb64))
