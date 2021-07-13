@@ -218,7 +218,9 @@ def send_result_email_to_apps():
 			template = format_html(
 				"<p>Hello!</p>"+
 				"<p>It is with heavy heart, we would like to inform you that you are not selected for the Techcraft Practical Training 2021, due to qualification reasons 😞</p>"+
-				"<p>It might not be this time, maybe not yet. But you can do it! 'Consistence is the KEY!'</p>"
+				"<p>It might not be this time, maybe not yet. But you can do it!</p>" +
+				"<br>"+
+				 "<p><b>'Consistence is the KEY!'</b></p>"+
 			    "<p>regards.</p>"
 			)
 			email['email-body'] = f"{template}"
