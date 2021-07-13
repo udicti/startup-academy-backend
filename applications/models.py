@@ -184,7 +184,7 @@ def send_email_to_apps():
 
 def send_result_email_to_apps():
 
-	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=2).first()).all()
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=3).first()).all()
 	count_sent = 0
 	# count_failed = 0
 	# store_failed = [] 
