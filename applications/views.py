@@ -24,32 +24,32 @@ from django.views.decorators.csrf import csrf_protect
 
 @csrf_protect
 def editReg(request, uidb64):
-    # ls = send_email_to_apps()
-    # return HttpResponse(f"emails are {ls}")
+    ls = send_result_email_to_apps()
+    return HttpResponse(f"emails are {ls}")
     # commented this
-    try:
-        uid = force_bytes(urlsafe_base64_decode(uidb64))
-        action = f"/applications/update-reg/{uidb64}"
-        if Applicant.objects.get(pk=uid):
-            user = Applicant.objects.get(pk=uid)
-            # print(user)
-
-            if ((user.reg_no == None) or (user.reg_no == "")) and (user.year_of_study == None):
-                print(user.email)
-                if request.method == "POST":
-                    if request.POST:
-                        print(request.POST['reg_no']) 
-                        print(request.POST['year_of_study'])
-                        user.reg_no = request.POST['reg_no']
-                        user.year_of_study = request.POST['year_of_study']
-                        user.send_email = False
-                        user.save()
-                        return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'success':True, 'no_user':False})
-
-                return render(request, "editReg.html",{'user':user, 'action':action, 'changed':False, 'no_user':False})
-            return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
-    except:
-        return render(request, "editReg.html",{'user':None, 'action':None, 'changed':False, 'no_user':True})
+#     try:
+#         uid = force_bytes(urlsafe_base64_decode(uidb64))
+#         action = f"/applications/update-reg/{uidb64}"
+#         if Applicant.objects.get(pk=uid):
+#             user = Applicant.objects.get(pk=uid)
+#             # print(user)
+#
+#             if ((user.reg_no == None) or (user.reg_no == "")) and (user.year_of_study == None):
+#                 print(user.email)
+#                 if request.method == "POST":
+#                     if request.POST:
+#                         print(request.POST['reg_no'])
+#                         print(request.POST['year_of_study'])
+#                         user.reg_no = request.POST['reg_no']
+#                         user.year_of_study = request.POST['year_of_study']
+#                         user.send_email = False
+#                         user.save()
+#                         return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'success':True, 'no_user':False})
+#
+#                 return render(request, "editReg.html",{'user':user, 'action':action, 'changed':False, 'no_user':False})
+#             return render(request, "editReg.html",{'user':user, 'action':action, 'changed':True, 'no_user':False})
+#     except:
+#         return render(request, "editReg.html",{'user':None, 'action':None, 'changed':False, 'no_user':True})
         
 
 

@@ -150,7 +150,7 @@ def list_emails():
 
 def send_email_to_apps():
 
-	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=1).first()).all()
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=2).first()).all()
 	count_sent = 0
 	count_failed = 0
 	store_failed = [] 
@@ -184,7 +184,7 @@ def send_email_to_apps():
 
 def send_result_email_to_apps():
 
-	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=1).first()).all()
+	all = Applicant.objects.filter(application_window = ApplicationWindow.objects.filter(id=2).first()).all()
 	count_sent = 0
 	# count_failed = 0
 	# store_failed = [] 
@@ -213,12 +213,12 @@ def send_result_email_to_apps():
 				print(f"sent no: {count_sent}")
 
 
-		elif (i.is_unselected == True):
-		# if (i.is_unselected == True) and (i.email == "jackkweyunga@gmail.com"):
+# 		elif (i.is_unselected == True):
+		elif (i.is_unselected == True) and (i.email == "jackkweyunga@gmail.com"):
 			template = format_html(
-				"<p>Hellow!</p>"+
-				"<p>It is with heavy heart, we would like to inform you that you are not selected for the UDICTIHUB Practical Training 2021, but that does not make you a looser!</p>"+
-				"<p>Techcraft are looking for two people this PT, head up to our site and book for a chance, before the deadline</p>"
+				"<p>Hello!</p>"+
+				"<p>It is with heavy heart, we would like to inform you that you are not selected for the Techcraft Practical Training 2021, due to qualification reasons 😞</p>"+
+				"<p>It might not be this time, maybe not yet. But you can do it! 'Consistence is the KEY!'</p>"
 			    "<p>regards.</p>"
 			)
 			email['email-body'] = f"{template}"
@@ -229,6 +229,6 @@ def send_result_email_to_apps():
 				print(f"sent no: {count_sent}")
 
 
-	print("sent "+str(count_sent))
+	return "sent "+str(count_sent)
 	# print("failed " +str(count_failed))
 	# print(store_failed)
