@@ -213,8 +213,8 @@ def send_result_email_to_apps():
 				print(f"sent no: {count_sent}")
 
 
-# 		elif (i.is_unselected == True):
-		elif (i.is_unselected == True) and (i.email == "jackkweyunga@gmail.com"):
+		elif (i.is_unselected == True):
+# 		elif (i.is_unselected == True) and (i.email == "jackkweyunga@gmail.com"):
 			template = format_html(
 				"<p>Hello!</p>"+
 				"<p>It is with heavy heart, we would like to inform you that you are not selected for the Techcraft Practical Training 2021, due to qualification reasons 😞</p>"+
