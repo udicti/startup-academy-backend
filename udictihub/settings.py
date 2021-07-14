@@ -17,7 +17,7 @@ if on_heroku == False:
 
     DEBUG = True
 else:
-    DEBUG = False
+    DEBUG = True
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
