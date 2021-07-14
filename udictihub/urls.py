@@ -52,7 +52,8 @@ urlpatterns = [
         views.activate_account, name='activate'),
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
     path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
-    path('applications/', include('applications.urls'))
+    path('applications/', include('applications.urls')),
+    path('udictidocs/', include('udictidocs.urls'))
 
 ]
 
