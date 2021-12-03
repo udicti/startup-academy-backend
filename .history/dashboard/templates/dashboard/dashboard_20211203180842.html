@@ -1,0 +1,141 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="contgainer-fluid">
+
+    <div class="row g-3 mx-2">
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Active Members</h4>
+                    <p class="display-4">23</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Inactive Members</h4>
+                    <p class="display-4 text-dark">23</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Active Projects</h4>
+                    <p class="display-4 text-secondary">10</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Inctive Members</h4>
+                    <p class="display-4 text-primary">10</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- users data table -->
+
+    <div class="card-body">
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Names</th>
+                    <th>username</th>
+                    <th>contacts</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if members %}
+                {% for member in members %}
+                <tr>
+                    <td>{{ cz.code }}</td>
+                    <td>{{ cz.long_form }}</td>
+                    <td>
+                        <div class="btn-group dropstart">
+                            <button class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill" style="font-size: 18px;"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="list-group list-group-action list-group-flush">
+                                    <a href=""
+                                        class="list-group-item list-group-item-action">
+                                        <i class=" bi bi-trash" style="color:red;font-size: 1reem;"></i>
+                                        Remove
+                                    </a>
+                                    <a role="button" class="list-group-item list-group-item-action"
+                                        data-bs-toggle="modal" data-bs-target="#{{cz.slug}}">
+                                        <i class=" bi bi-pencil-square"></i> Edit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <!-- Edit Modal -->
+                    <div class="modal fade" id="{{cz.slug}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit course</h5>
+                                    <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+
+                                </div>
+                                <form action="{% url 'edit-course'%}" method="post">
+                                    {% csrf_token %}
+
+                                    <div class="modal-body">
+                                        <input type="number" name="id" value="{{cz.id}}" hidden id="">
+                                        <input type="text" name="code" value="{{cz.code}}" hidden id="">
+                                        <input disabled type="text" required value="{{cz.code}}" placeholder="code"
+                                            class="mb-2 form-control">
+                                        <input type="text" name="long_form" required placeholder="long form"
+                                            value="{{cz.long_form}}" class="form-control">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" required class="btn btn-sm btn-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <th>-</th>
+                <th>No courses</th>
+                <th>-</th>
+                {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>code</th>
+                    <th>longform</th>
+                    <th>actions</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

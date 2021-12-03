@@ -1,0 +1,305 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+
+    window.onload = (ev) => {
+        var activeTab = window.localStorage.getItem("active-tab");
+        var tab = new bootstrap.Tab(document.querySelector(`#${activeTab}`))
+        tab.show()
+        // console.log(tab);
+    }
+
+
+
+    {% for programme in programmes %}
+
+    function selectGr{{ programme.programme.id }}{{ programme.tag.id }} (v, l) {
+        $('.c_code-{{programme.tag}}-{{programme.programme.slug}}').val(v);
+        // console.log(v);
+        $('#c_long_form-{{programme.tag}}-{{programme.programme.slug}}').val(l);
+    }
+
+    document.getElementById('{{programme.programme.slug}}-{{programme.tag.slug}}-tab').addEventListener('click', (ev) => {
+        window.localStorage.setItem("active-tab", "{{programme.programme.slug}}-{{programme.tag.slug}}-tab");
+    });
+
+    var d_url = "/dashboard/group-search/";
+
+
+    var groupSearch{{ programme.programme.id }}{{ programme.tag.id }} = async (q) => {
+
+        res = (await axios.post(d_url, { "query": q }))
+
+        if (res.status == 200) {
+            console.log(res.data);
+            $("#groups-dropdown-menu-{{programme.tag}}-{{programme.programme.slug}}").html("");
+
+            var ht = ""
+            for (let g of res.data["results"]) {
+                ht += `<li role="button" onclick="selectGr{{programme.programme.id}}{{ programme.tag.id }}(this.innerText, '${g["long_form"]}');" class="list-group-item list-group-item-action"> ${g['group']} </li>`
+            }
+
+            $("#groups-dropdown-menu-{{programme.tag}}-{{programme.programme.slug}}").html(ht);
+        }
+    }
+
+    $(document).ready(function () {
+        $("#group-search-{{programme.tag}}-{{programme.programme.slug}}").on("keyup", function () {
+            var q = $(this).val();
+                groupSearch{{ programme.programme.id }}{{ programme.tag.id }} (q);
+        });
+    });
+
+    {% endfor %}
+
+    function copyText(copyText) {
+
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+
+        /* Alert the copied text */
+        play()
+        showNotification('Success', "Copied the text: " + copyText.value);
+    }
+
+
+    function tURL(id, tag) {
+        var turl = `https://udsmtt.tk/udsm-timetable/?id=${id}&tag=${tag}`;
+        console.log(turl)
+        return turl;
+    }
+
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+
+
+<div class="mx-auto w-100">
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                <i class="bi bi-house" style="font-size: 18px;"></i>
+            </button>
+
+            {% for programme in programmes %}
+            <button class="nav-link" id="{{programme.programme.slug}}-{{programme.tag.slug}}-tab" data-bs-toggle="tab"
+                data-bs-target="#{{programme.programme.slug}}-{{programme.tag.slug}}" type="button" role="tab"
+                aria-controls="{{programme.programme.slug}}-{{programme.tag.slug}}" aria-selected="false">
+                <i class="bi bi-bookmarks"></i>
+                {{programme.programme.id}}-{{programme.tag.slug}}
+            </button>
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="card">
+                <div class="card-header">
+                    A welcome note.
+                </div>
+                <div class="card-body">
+                    <h1>UDSM TT dashboard Features</h1>
+                    <br>
+                    <h2>Contributing to programmes</h2>
+                    <p>
+                        Within this handy dashboard, you are able to contribute to any programme by adding or removing
+                        courses asssigned to those specific courses.
+                    </p>
+
+                    <br>
+                    <h2>Adding other contributors</h2>
+                    <p>
+                        Within this dashboard, You will be able to add other contributors who want to contribute to this
+                        timmetable.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% for programme in programmes %}
+        <div class="tab-pane fade" id="{{programme.programme.slug}}-{{programme.tag.slug}}" role="tabpanel"
+            aria-labelledby="{{programme.programme.slug}}-{{programme.tag.slug}}-tab">
+            <div class="card mb-3" style="max-width:100%;overflow: auto;">
+                <div class="card-header">
+                    <h1 class="display-7">{{programme.programme.name}} <span class="badge display-6 ">{{user.year}}
+                        </span>
+                    </h1>
+                    <input disabled id="turl{{ programme.tag.id }}-{{programme.programme.slug}}" class="specific_url form-control mb-3">
+                    <script>
+                        var id = '{{programme.programme.id}}'
+                        var tag = '{{programme.tag}}'
+
+                        var turl = `https://udsmtt.tk/udsm-timetable/?id=${id}&tag=${tag}`;
+                        document.getElementById('turl{{ programme.tag.id }}-{{programme.programme.slug}}').value = turl;
+                    </script>
+                    <span> Share the link to this specific timetable: <button class="btn-sm btn-primary"
+                            onclick="copyText(document.getElementById('{{programme.tag}}'));">copy</button> </span>
+                    <hr>
+                    <div class="d-grid gap-2">
+                        new
+                        <button type="button" data-bs-toggle="modal"
+                            data-bs-target="#add-course-modal-for-{{programme.tag}}-{{programme.programme.slug}}" id=""
+                            class="btn btn-icon btn-primary">
+                            <i class="bi bi-plus-lg"></i> </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>code</th>
+                                <th>longform</th>
+                                <th>actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if programme.courses %}
+                            {% for cz in programme.courses %}
+                            <tr>
+                                <td>{{ cz.code }}</td>
+                                <td>{{ cz.long_form }}</td>
+                                <td>
+                                    <div class="btn-group dropstart">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-gear-fill" style="font-size: 18px;"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="list-group list-group-action list-group-flush">
+                                                <a href="{% url 'remove-course' cz.id programme.programme.id %}"
+                                                    class="list-group-item list-group-item-action">
+                                                    <i class=" bi bi-trash" style="color:red;font-size: 1reem;"></i>
+                                                    Remove
+                                                </a>
+                                                <a role="button" class="list-group-item list-group-item-action"
+                                                    data-bs-toggle="modal" data-bs-target="#{{cz.slug}}">
+                                                    <i class=" bi bi-pencil-square"></i> Edit
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="{{cz.slug}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modelTitleId" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit course</h5>
+                                                <button type="button" class="btn btn-sm" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+
+                                            </div>
+                                            <form action="{% url 'edit-course'%}" method="post">
+                                                {% csrf_token %}
+
+                                                <div class="modal-body">
+                                                    <input type="number" name="id" value="{{cz.id}}" hidden id="">
+                                                    <input type="text" name="code" value="{{cz.code}}" hidden id="">
+                                                    <input disabled type="text" required value="{{cz.code}}"
+                                                        placeholder="code" class="mb-2 form-control">
+                                                    <input type="text" name="long_form" required placeholder="long form"
+                                                        value="{{cz.long_form}}" class="form-control">
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-sm btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" required
+                                                        class="btn btn-sm btn-primary">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <th>-</th>
+                            <th>No courses</th>
+                            <th>-</th>
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>code</th>
+                                <th>longform</th>
+                                <th>actions</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="card-footer text-muted">
+                    udsmtt@2021
+                </div>
+            </div>
+
+            <!-- Add course model -->
+            <div class="modal fade" id="add-course-modal-for-{{programme.tag}}-{{programme.programme.slug}}" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add new course</h5>
+                            <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                        <form class="form" action="{% url 'add-course' programme.programme.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <input type="text" name="year" hidden value="{{ programme.tag  }}">
+                                <input type="text" class="c_code-{{programme.tag}}-{{programme.programme.slug}}" name="code" hidden>
+                                <div>
+                                    <input placeholder="code" value="search code"
+                                        class="mb-2 c_code-{{programme.tag}}-{{programme.programme.slug}} form-control dropdown-toggle"
+                                        type="button" data-toggle="dropdown">
+                                    <div class="dropdown-menu">
+                                        <input class="form-control shadow-lg bg-light" autocomplete="off"
+                                            id="group-search-{{programme.tag}}-{{programme.programme.slug}}" type="text"
+                                            placeholder="Search..">
+                                        <ul class="list-group list-group-flush"
+                                            id="groups-dropdown-menu-{{programme.tag}}-{{programme.programme.slug}}"
+                                            style="max-height: 360px; overflow-y: auto;">
+                                            <li class="list-group-item list-group-item-action">
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <input type="text" id="c_long_form-{{programme.tag}}-{{programme.programme.slug}}" name="long_form"
+                                    required placeholder="long form" class="form-control">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"
+                                    required>Close</button>
+                                <button type="submit" class="btn btn-sm btn-primary" required>Save</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

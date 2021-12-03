@@ -1,0 +1,107 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="contgainer-fluid">
+
+    <div class="row g-3 mx-2">
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Active Members</h4>
+                    <p class="display-4">23</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Inactive Members</h4>
+                    <p class="display-4 text-dark">23</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Active Projects</h4>
+                    <p class="display-4 text-secondary">10</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Inctive Members</h4>
+                    <p class="display-4 text-primary">10</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- users data table -->
+
+    <div class="card-body">
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Names</th>
+                    <th>username</th>
+                    <th>contacts</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if members %}
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.first_name }} {{ member.last_name}}</td>
+                    <td>{{ member.username }}</td>
+                    <td>{{ member.email }} {{ member.profile}}</td>
+                    <td>
+                        <div class="btn-group dropstart">
+                            <button class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill" style="font-size: 18px;"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="list-group list-group-action list-group-flush">
+                                    <a href=""
+                                        class="list-group-item list-group-item-action">
+                                        <i class=" bi bi-trash" style="color:red;font-size: 1reem;"></i>
+                                        Delete
+                                    </a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+                {% else %}
+                <th>-</th>
+                <th>No courses</th>
+                <th>-</th>
+                {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>code</th>
+                    <th>longform</th>
+                    <th>actions</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

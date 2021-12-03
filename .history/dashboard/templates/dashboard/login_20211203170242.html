@@ -1,0 +1,47 @@
+{% extends "dashboard/dashboard_auth_base.html" %}
+
+
+{% block main_content %}
+{% load static %}
+<div class="container-fluid shadow d-flex flex-column flex-1 justify-content-center align-items-center"
+    style="height: 100vh;">
+    <img width src="{% static 'assets/img/udicti-logo.jpeg' %}" alt="">
+    <br>
+    <p class="text-center"> AUTH </p>
+    <form action="{% url 'login'%}" class="form bg-white p-3 m-3" method="post"
+        style="max-width: 420px;min-width: 320px;">
+
+        {% csrf_token %}
+
+        <div class="mb-3 input-group">
+            <label for="" class="input-group-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#148EBA"
+                    class="bi bi-envelope" viewBox="0 0 16 16">
+                    <path
+                        d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
+                </svg>
+            </label>
+            <input type="text" name="email" id="" class="form-control" placeholder="">
+        </div>
+
+        <div class="mb-3 input-group">
+            <label for="" class="input-group-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#148EBA" class="bi bi-key"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                    <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
+            </label>
+            <input type="password" name="password" id="" class="form-control" placeholder="" aria-describedby="helpId">
+        </div>
+
+        <div class="mb-3 d-flex justify-content-center align-items-center">
+            <button type="submit" class="btn btn-primary w-100">LOGIN</button>
+        </div>
+
+    </form>
+</div>
+
+
+{% endblock %}
