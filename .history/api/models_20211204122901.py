@@ -185,7 +185,7 @@ class AttendanceList(models.Model):
     attendant = models.ForeignKey(User, related_name="attendance", verbose_name="attendant", on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"on {self.day.date}"
+        return f"on {self.day}"
 
 class Teams(models.Model):
     """Teams Model"""

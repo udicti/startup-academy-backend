@@ -44,7 +44,7 @@
                     </p>
                     <hr>
                     <form action="{% url 'member_attendance_view' %}" class="form" method="post">
-                        {% csrf_token %}
+                        {}
                         <div class="input-group">
                             <label for="" class="input-group-text">
                                 <i data-feather="code"></i>
@@ -75,7 +75,7 @@
                             {% if attendance %}
                             {% for at in attendance %}
                             <tr>
-                                <td>{{ at.day.date }} <span class="badge bg-success text-white  "> attended </span></td>
+                                <td>{{ at.day }}</td>
                             </tr>
                             {% endfor %}
                             {% else %}
