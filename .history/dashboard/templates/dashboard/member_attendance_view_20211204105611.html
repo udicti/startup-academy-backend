@@ -23,23 +23,20 @@
                     {% endif %}
                     @{{ member.username }}
                 </div>
-                <hr>
+
                 <div class="card-body">
                     <p>
                         Today: {{ today }}
                     </p>
                     <p>
-                        status: 
-                        {% if attended %} <span class="text-success">ATTENDED</span> 
-                        {% else %}  <span class="text-danger">NOT ATTENDED</span>
-                        {% endif %}   
+                        
                     </p>
                     <hr>
                     <p class="text-center w-100">
-                        Enter an Attendance code to sign your attendance
+                        Enter an Attendance code
                     </p>
                     <hr>
-                    <form action="{% url 'member_attendance_view' %}" class="form">
+                    <form action="" class="form">
                         <div class="input-group">
                             <label for="" class="input-group-text">
                                 <i data-feather="code"></i>
