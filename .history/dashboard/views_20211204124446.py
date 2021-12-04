@@ -173,7 +173,9 @@ def start_attendence(request):
     
     all = User.objects.all()
     
-    if Attendance.objects.filter(date=date.today()).fist() is None:    
+    if Attendance.objects.filter(date=date.today()).fist() is None:
+        
+        
         new = Attendance(date=date.today())
         new.save()
     

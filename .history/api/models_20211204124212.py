@@ -167,7 +167,7 @@ class Attendance(models.Model):
 	"""Attendance Model to track Users"""
 	date = models.DateField(default=date.today)
 	
-	
+	new 
 	def save(self, *args, **kwargs):
      
 		all = User.objects.all()
