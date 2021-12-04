@@ -113,22 +113,22 @@ def attendance_view(request):
     """
     
     context = {
-        
+        ""
     }
     
     return render(request, 'dashboard/attendance.html', context=context)
 
 
-def teams_view(request):
+def attendance_view(request):
     
     """Attendance View
     """
     
     context = {
-        
+        ""
     }
     
-    return render(request, 'dashboard/teams.html', context=context)
+    return render(request, 'dashboard/attendance.html', context=context)
 
 
 # actions

@@ -18,11 +18,12 @@ urlpatterns = [
     path('attendance/', views.attendance_view, name='attendance'),
     
     # projects vies
-    path('projects/', views.projects_view, name='projects'),
+    path('projects/', views.dashboard, name='dashboard'),
     
     
     # teams view
-    path('teams/', views.teams_view, name='teams'),
+    path('teams/', views.dashboard, name='dashboard'),
+    
     
 ]
 

@@ -15,14 +15,13 @@ urlpatterns = [
     path("member/<int:id>/", views.member_view, name="member-view"),
     
     # attendance view
-    path('attendance/', views.attendance_view, name='attendance'),
+    
     
     # projects vies
-    path('projects/', views.projects_view, name='projects'),
     
     
     # teams view
-    path('teams/', views.teams_view, name='teams'),
+    
     
 ]
 

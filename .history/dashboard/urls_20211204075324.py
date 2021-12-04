@@ -24,5 +24,6 @@ urlpatterns = [
     # teams view
     path('teams/', views.teams_view, name='teams'),
     
+    
 ]
 
