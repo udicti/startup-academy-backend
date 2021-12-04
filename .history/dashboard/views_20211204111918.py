@@ -148,12 +148,6 @@ class MemberAttendanceView(View):
     def post(self, request):
         day = Attendance.objects.filter(date=date.today()).first()
         
-        attended = AttendanceList.objects.filter(attendant=request.user, day=day).first()
-                
-        if attended:
-            messages.error(request, "The code is not valid")
-            return redirect('member_attendance_view')
-            
         code = request.POST["code"]
         atc = AttendanceCode.objects.filter(user = request.user, code=code).first()
         
@@ -161,10 +155,8 @@ class MemberAttendanceView(View):
             messages.error(request, "The code is not valid")
             return redirect('member_attendance_view')
         
-        new = AttendanceList(attendant=request.user, day=day)
-        new.save()
+        new = AttendanceList(attendant=request.user, day=)
         
-        messages.success(request, "Welcome to Udictihub, You signed your attendance successfully.")
         return redirect('member_attendance_view')
 
 def teams_view(request):

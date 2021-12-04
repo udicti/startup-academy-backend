@@ -148,12 +148,6 @@ class MemberAttendanceView(View):
     def post(self, request):
         day = Attendance.objects.filter(date=date.today()).first()
         
-        attended = AttendanceList.objects.filter(attendant=request.user, day=day).first()
-                
-        if attended:
-            messages.error(request, "The code is not valid")
-            return redirect('member_attendance_view')
-            
         code = request.POST["code"]
         atc = AttendanceCode.objects.filter(user = request.user, code=code).first()
         
