@@ -141,7 +141,7 @@ class MemberAttendanceView(View):
             "member": request.user,
             "today": date.today(),
             "attended": attended,
-            "attendance": AttendanceList.objects.filter(attendant=request.user).all()
+            "attenda"
         }
         
         return render(request, 'dashboard/member_attendance_view.html', context=context) 
@@ -167,20 +167,6 @@ class MemberAttendanceView(View):
         
         messages.success(request, "Welcome to Udictihub, You signed your attendance successfully.")
         return redirect('member_attendance_view')
-
-
-def start_attendence(request):
-    
-    all = User.objects.all()
-    
-    AttendanceCode.objects.all().delete()
-
-    for i in all:
-        code = AttendanceCode(user=i)
-        code.save()
-    
-    return redirect('attendance')
-
 
 def teams_view(request):
     

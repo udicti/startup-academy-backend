@@ -180,7 +180,7 @@ class Attendance(models.Model):
 class AttendanceList(models.Model):
     
     """Attendance List"""
-    
+     
     day = models.ForeignKey(Attendance, related_name="list", verbose_name="day", on_delete=models.CASCADE)
     attendant = models.ForeignKey(User, related_name="attendance", verbose_name="attendant", on_delete=models.CASCADE)
 

@@ -16,7 +16,7 @@ urlpatterns = [
     
     # attendance view
     path('attendance/', views.attendance_view, name='attendance'),
-    path('', views.attendance_view),
+    path('', views.attendance_view, name='attendance'),
     
     # projects vies
     path('projects/', views.projects_view, name='projects'),

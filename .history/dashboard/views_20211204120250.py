@@ -169,18 +169,7 @@ class MemberAttendanceView(View):
         return redirect('member_attendance_view')
 
 
-def start_attendence(request):
-    
-    all = User.objects.all()
-    
-    AttendanceCode.objects.all().delete()
-
-    for i in all:
-        code = AttendanceCode(user=i)
-        code.save()
-    
-    return redirect('attendance')
-
+def start_attendence(request)
 
 def teams_view(request):
     

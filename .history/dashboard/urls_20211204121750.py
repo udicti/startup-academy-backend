@@ -16,7 +16,7 @@ urlpatterns = [
     
     # attendance view
     path('attendance/', views.attendance_view, name='attendance'),
-    path('', views.attendance_view),
+    path('', views.attendance_view, name='attendance'),
     
     # projects vies
     path('projects/', views.projects_view, name='projects'),
@@ -32,7 +32,7 @@ urlpatterns = [
     path('member_attendance_view/', views.MemberAttendanceView.as_view(), name='member_attendance_view'),
     
     # start attendance View
-    path('start_attendance/', views.start_attendence, name='start_attendance'),
+    path('member_attendance_view/', views.MemberAttendanceView.as_view(), name='member_attendance_view'),
     
 ]
 

@@ -2,11 +2,7 @@
 
 
 {% block scripts %}
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
+
 {% endblock %}
 
 
@@ -67,20 +63,34 @@
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>day</th>
+                                <th>Names</th>
+                                <th>username</th>
+                                <th>contacts</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% if attendance %}
                             {% for at in attendance %}
                             <tr>
-                                <td>{{ at.day }}</td>
+                                <td>{{ at.id }}</td>
+                                <td>{{ at. }} {{ member.profile.phone}}</td>
                             </tr>
                             {% endfor %}
                             {% else %}
-                            <th>No attendance</th>
+                            <th>-</th>
+                            <th>No Members</th>
+                            <th>-</th>
                             {% endif %}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Names</th>
+                                <th>username</th>
+                                <th>contacts</th>
+                                <th>Actions</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

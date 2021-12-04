@@ -171,14 +171,6 @@ class MemberAttendanceView(View):
 
 def start_attendence(request):
     
-    all = User.objects.all()
-    
-    AttendanceCode.objects.all().delete()
-
-    for i in all:
-        code = AttendanceCode(user=i)
-        code.save()
-    
     return redirect('attendance')
 
 

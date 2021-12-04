@@ -2,11 +2,7 @@
 
 
 {% block scripts %}
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
+
 {% endblock %}
 
 
@@ -78,9 +74,19 @@
                             </tr>
                             {% endfor %}
                             {% else %}
-                            <th>No attendance</th>
+                            <th>-</th>
+                            <th>No Members</th>
+                            <th>-</th>
                             {% endif %}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Names</th>
+                                <th>username</th>
+                                <th>contacts</th>
+                                <th>Actions</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
