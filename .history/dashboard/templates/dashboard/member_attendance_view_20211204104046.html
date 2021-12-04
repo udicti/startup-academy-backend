@@ -1,0 +1,65 @@
+{% extends "dashboard/attendance_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            
+        </div>
+
+        <div class="col-md-4">
+
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            {% if user.profile.profile_pic %}
+            <img height="45" src="{{member.profile.profile_pic}}" alt="">
+            {% else %}
+            <i class="bi bi-person" style="font-size: 120px;"> </i>
+            {% endif %}
+            @{{ member.username }}
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center active">
+                    {{ member.first_name }} {{ member.last_name }}
+
+                    {% if member.is_active %}
+                    <span class="badge bg-secondary badge-pill">active</span>
+                    {% else %}
+                    <span class="badge bg-dark badge-pill">inactive</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Projects
+                    <span class="badge bg-secondary text-white badge-pill">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center disabled">
+                    Posts
+                    <span class="badge bg-secondary text-white badge-pill">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center disabled">
+                    Comments
+                    <span class="badge bg-secondary text-white badge-pill">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center disabled">
+                    Likes
+                    <span class="badge bg-secondary text-white badge-pill">0</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
