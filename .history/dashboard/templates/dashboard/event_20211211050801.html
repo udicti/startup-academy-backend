@@ -1,0 +1,35 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="container-fluid py-2">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2>{{ event }}</h2>
+                    <hr>
+                    <p>{{ event.description }}</p>
+                    <br>
+                    <div class="flex">
+                        <a href="" class="btn btn-danger">
+                            delete event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

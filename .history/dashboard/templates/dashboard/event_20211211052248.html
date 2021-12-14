@@ -1,0 +1,71 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="container-fluid py-2">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2>{{ event }}</h2>
+                    <hr>
+                    <p>{{ event.description }}</p>
+                    <p>
+                        state <span class="badge badge-primary p-2">ongoing</span>
+                    </p>
+                    <hr>
+                    <div class="flex">
+                        <a href="" class="btn btn-danger">
+                            delete event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <table id="example" class="table table table-borderless" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>user</th>
+                            <th>event code</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if event %}
+                        {% for code in event.attendance_codes %}
+                        <tr>
+                            <td>
+                                {{ code.user.uername }}
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <a href="" class="btn btn-sm btn-primary">
+                                        newlist <i data-feather="plus" class="mx-2" style="font-size: 1rem;"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <th>-</th>
+                        <th>No evnts</th>
+                        <th>-</th>
+                        {% endif %}
+                    </tbody>
+                    
+                </table>  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

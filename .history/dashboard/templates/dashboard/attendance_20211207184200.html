@@ -1,0 +1,90 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="container-fluid">
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg" >
+      Launch
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-sm|lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">sm|lg</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i></i>
+                    </button>
+    
+                </div>
+                <div class="modal-body">
+                    Body
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="card mt-2">
+        <div class="card-header">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelId">
+                <i data-feather="plus"></i>
+                 start a new list
+            </button>
+        </div>
+
+        <div class="card-body">
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Names</th>
+                        <th>username</th>
+                        <th>code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if attendance_codes %}
+                    {% for code in attendance_codes %}
+                    <tr>
+                        <td>{{ code.user.first_name }} {{ code.user.last_name}}</td>
+                        <td>{{ code.user.username }}</td>
+                        <td>{{ code.code }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <th>-</th>
+                    <th>No Codes</th>
+                    <th>-</th>
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Names</th>
+                        <th>username</th>
+                        <th>code</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
