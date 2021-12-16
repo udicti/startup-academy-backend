@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+<p>Hi {{ user.username }},</p>
+
+<p></p>
+
+{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}
