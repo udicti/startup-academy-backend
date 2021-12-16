@@ -1,7 +1,6 @@
 
 Hi {{ user.username }},
-
-<p>Please click on the link to confirm your registration,</p>
+Please click on the link to confirm your registration,
 
 {{ domain }}{% url 'activate' uidb64=uid token=token %}
 
