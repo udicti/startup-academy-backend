@@ -1,0 +1,123 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="contgainer-fluid">
+
+    <div class="row g-3 mx-2">
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>active members</h4>
+                    <p class="display-4">{{ active_members }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>inactive members</h4>
+                    <p class="display-4 text-dark">{{ inactive_members }}</p>
+                    <a href="{% url 'send_activation_to_all' %}" class="btn btn-primary">resend link</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>active projects</h4>
+                    <p class="display-4 text-secondary">{{ active_projects }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4>inactive projects</h4>
+                    <p class="display-4 text-primary">{{ inactive_projects }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- users data table -->
+
+    <div class="card-body">
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Names</th>
+                    <th>username</th>
+                    <th>contacts</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if members %}
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.first_name }} {{ member.last_name}}</td>
+                    <td>
+                        {{ member.username }}
+                        {% if member.is_active %}
+                            <span class="badge bg-primary text-white p2">active</span>
+                        {% else %}
+                            <span class="badge bg-danger text-white p2">inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ member.email }} {{ member.profile.phone}}</td>
+                    <td>
+                        <div class="btn-group dropstart">
+                            <button class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill" style="font-size: 18px;"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="list-group list-group-action list-group-flush">
+                                    <a href="" class="list-group-item list-group-item-action">
+                                        <i class=" bi bi-trash" style="color:red;font-size: 1reem;"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'member-view' member.id%}" class="btn text-primary">
+                                <i data-feather="corner-up-right" style="font-size: 1rem;"></i>
+                            </a>
+                            
+                        </div>
+                    </td>
+
+                </tr>
+                {% endfor %}
+                {% else %}
+                <th>-</th>
+                <th>No Members</th>
+                <th>-</th>
+                {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Names</th>
+                    <th>username</th>
+                    <th>contacts</th>
+                    <th>Actions</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
