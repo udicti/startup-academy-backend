@@ -1,0 +1,64 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="row p-3">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <h4>
+                    Add a new team
+                </h4>
+                <hr>
+                <div class="form">
+                    <form action="">
+                        <div class="input-group">
+                            <input type="text" placeholder="team name" class="form-control">
+                            <input type="submit" class="btn btn-primar btn-sm btn-primary"  value="Add">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3 mb-3">
+            <div class="card-body">
+                <h4>All teams</h4>
+                <hr>
+                None
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+
+        <div class="card">
+            <h4 class="text-center mt-4">
+                Stats
+            </h4>
+            <div class="card-body col">
+                <div class="card row bg-primary text-white mb-3 p-3">
+                    <h5 class="text-white text-center">Active teams</h5>
+                    <hr>
+                    <p class="display-3 text-center">3</p>
+                </div>
+                <div class="card row p-3">
+                    <h5 class="text-center">Most Active teams</h5>
+                    <hr>
+                    <ol>
+                        <li>Gifted boys </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
