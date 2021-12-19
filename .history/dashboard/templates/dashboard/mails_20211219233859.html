@@ -1,0 +1,59 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+{% block main_content %}
+
+<div class="">
+
+    <div class="card">
+        <div class="card-body">
+            <button class="mx-2 btn btn-primary">
+                <i data-feather="plus"></i>
+                Compose     
+            </button>
+            <button class="mx-2 btn btn-primary">
+                <i data-feather="plus"></i>
+                Compose     
+            </button>
+            <button class="mx-2 btn btn-primary">
+                <i data-feather="plus"></i>
+                Compose     
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Emails Saved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if emails %}
+                    {% for email in emails %}
+                    <tr>
+                        <td>
+                            <a href="">
+                                {{email}}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <th>No teams yet</th>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
