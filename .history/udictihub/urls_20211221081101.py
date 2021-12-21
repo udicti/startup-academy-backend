@@ -12,8 +12,8 @@ import dashboard
 urlpatterns = [
     
     # dashboard
-    path('', include('dashboard.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('', include('dashboard.urls')),
     
     # login
     path("login/", dashboard.views.Login.as_view(), name="login"),

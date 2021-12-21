@@ -13,6 +13,7 @@ urlpatterns = [
     
     # dashboard
     path('', include('dashboard.urls')),
+    
     path('dashboard/', include('dashboard.urls')),
     
     # login

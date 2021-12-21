@@ -11,8 +11,8 @@ import dashboard
 
 urlpatterns = [
     
-    # dashboard
     path('', include('dashboard.urls')),
+    # dashboard
     path('dashboard/', include('dashboard.urls')),
     
     # login
