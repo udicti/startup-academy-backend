@@ -42,7 +42,7 @@ class UserProfile(models.Model):
 	# profile_pic = models.ImageField(upload_to='profile_pics', null=True)
 	profile_pic = models.URLField(blank=True, null=True)
 	bio = models.TextField(max_length=5000)
-	mobile = models.CharField(max_length=10, blank = True)
+	mobile = models.CharField(max_length=255, blank = True)
 	university = models.CharField(max_length=255, blank = True)
 	college = models.CharField(max_length=255, blank = True)
 	programme = models.CharField(max_length=255, blank = True)

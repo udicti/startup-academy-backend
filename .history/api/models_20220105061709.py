@@ -42,7 +42,7 @@ class UserProfile(models.Model):
 	# profile_pic = models.ImageField(upload_to='profile_pics', null=True)
 	profile_pic = models.URLField(blank=True, null=True)
 	bio = models.TextField(max_length=5000)
-	mobile = models.CharField(max_length=10, blank = True)
+	mobile = models.CharField(max_length=255, blank = True)
 	university = models.CharField(max_length=255, blank = True)
 	college = models.CharField(max_length=255, blank = True)
 	programme = models.CharField(max_length=255, blank = True)
@@ -137,6 +137,9 @@ class Mail(models.Model):
 	date_created = models.DateField(auto_now_add=True)
 	sent = models.BooleanField(blank=True, default = False)
 
+	def __str__(self):
+		return self.email_subject
+	
 
 
 import string
@@ -156,26 +159,66 @@ def get_random_code():
     
     return code
  
+ 
+#  To store an attendance we need to track envents
+# so gotta create events model on top
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=1024)
+    description = models.TextField()
+    on_going = models.BooleanField(default=False)
+    
+    def __str__(self) -> str:
+    		return f"{self.name}"
+    
 class AttendanceCode(models.Model):
     """Model to provide attendance Code"""
+    event = models.ForeignKey("api.Event", related_name="event_attendance_codes", verbose_name="event", on_delete=models.CASCADE, null=True)
     code = models.CharField(max_length=244, default=get_random_code)
     user = models.ForeignKey(User, related_name="attendance_code", verbose_name="user", on_delete=models.CASCADE)
 
 
+from datetime import date
 class Attendance(models.Model):
 	"""Attendance Model to track Users"""
- 	date = models.DateField(default)
+	event = models.ForeignKey("api.Event", related_name="event_attendances", verbose_name="event", on_delete=models.CASCADE, null=True, unique=False)
+	date = models.DateField(default=date.today, unique=False)
+	description = models.TextField(default="description", unique=False)
+	time_created = models.TimeField('time created', default=timezone.now)
+	open = models.BooleanField(default=False)
+	closed = models.BooleanField(default=True)
+ 
+	def __str__(self) -> str:
+		return f"{self.date}"
+
+	
+	def save(self, *args, **kwargs):
+    
+		all = User.objects.all()
+
+		for i in all:
+			code = AttendanceCode(event=self.event, user=i)
+			code.save()
+   
+		return super().save(self, *args, **kwargs)
  
 class AttendanceList(models.Model):
-     
+    
     """Attendance List"""
-     
-    day = models.ForeignKey(Attendance, related_name="list", verbose_name="day", on_delete=models.CASCADE)
+    
+    attendance = models.ForeignKey(Attendance, related_name="list", verbose_name="day", on_delete=models.CASCADE)
     attendant = models.ForeignKey(User, related_name="attendance", verbose_name="attendant", on_delete=models.CASCADE)
-
+    
+    def __str__(self):
+        return f"on {self.attendance.date}"
 
 class Teams(models.Model):
     """Teams Model"""
     name = models.CharField(max_length=255)
     members = models.ManyToManyField(User, related_name="teams", verbose_name="member")
+    leader = models.ForeignKey(User, related_name="owned_teams", verbose_name="leadder", on_delete=models.CASCADE, default=1)
+    
+    def __str__(self) -> str:
+    		return f"{self.name}"
 
