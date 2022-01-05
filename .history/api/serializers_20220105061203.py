@@ -102,6 +102,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		
 		data['email-body'] = [
 			f"p> Dear {user.username}",
+			f""
 			f"p> Thank you for creating an account in Udictihub, Click the link below to activate your account.",
 			f"a> Follow this Activation Link href> {current_site.domain}{activation_url}",
 			f"p> After activating your account, you will be able to login.",

@@ -34,7 +34,8 @@ def send_activation_link(id):
     
     data['email-body'] = [
         f"p> Dear {user.username}",
-        f"p> Thank you for regitering with Udictihub, Click the link below to activate your account.",
+        f"p> We understand you faced some challenges during registrations, APOLOGY for that. "
+        f"p> Thank you for creating an account in Udictihub, Click the link below to activate your account.",
         f"a> Follow this Activation Link href> {current_site.domain}{activation_url}",
         f"p> After activating your account, you will be able to login.",
     ]
@@ -90,25 +91,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		user.set_password(validated_data['password'])
 		user.is_active = False
 		data = {}
-    
 		current_site = Site.objects.get_current()
-
 		email_subject = 'Activate Your Account'
-		
-		activation_url = reverse(
-			'activate', 
-			args=[urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user)]
-		)
-		
-		data['email-body'] = [
-			f"p> Dear {user.username}",
-			f"p> Thank you for creating an account in Udictihub, Click the link below to activate your account.",
-			f"a> Follow this Activation Link href> {current_site.domain}{activation_url}",
-			f"p> After activating your account, you will be able to login.",
-		]
-		
+		message = render_to_string('activate_account.html', {
+			'user': user,
+			'domain': current_site.domain,
+			'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+			'token': account_activation_token.make_token(user),
+			})
 		data["email-subject"] = email_subject
-		data["email-receiver"] = user.email
+		data["email-receiver"] = validated_data['email']
+		data["email-body"] = message
 		send_mail(data)
 		user.save()
 		return user

@@ -19,7 +19,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django import forms
 from django.db import transaction
-from django.urls import reverse
+
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
