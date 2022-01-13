@@ -1,0 +1,4 @@
+release: p
+web: gunicorn udictihub.wsgi
+
+

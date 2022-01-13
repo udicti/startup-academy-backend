@@ -1,0 +1,4 @@
+release: python 
+web: gunicorn udictihub.wsgi
+
+

@@ -1,0 +1,173 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+<div class="row mt-3 container-fluid">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body mb-3">
+                <div class="text-center">
+                    <h1>{{ team.name }}</h1> 
+                    <span class="badge">
+                        <a href="#" class="btn btn-sm"> Edit Name</a>
+                    </span>
+                    <hr>
+                </div>
+
+                <div class="mb-3">
+                    <p>
+                        <b>{{nmembers }}</b> - members
+                        <b>{{ per_progress}} % </b> - progress
+                    </p>
+                    <p>
+                        led by: {{ team.leader }}
+                    </p>
+                </div>
+                <hr>
+
+                <div class="mb-3">
+                    <!-- user search logic -->
+                    <h3>Add a member</h3>
+                    <input type="text" name="" placeholder="search by username" class="form-control">
+
+                </div>
+                
+
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body mb-3">
+                <table id="example" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>member</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if members %}
+                        {% for member in members %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'team-view' team.id%}">
+                                    {{member}}
+                                </a>
+                                {% if team.leader == member %}
+                                <span class="badge bg-primary">leader</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <th>No teams yet</th>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="mb-3 d-flex" style="min-height: 320px;min-width: 100%;">
+    <div class="card w-100" style="min-height: 100%;">
+        <div class="card-body">
+            <h4>Progress graph</h4>
+            <hr>
+
+        </div>
+    </div>
+</div>
+
+<div class="mb-3 container ">
+
+    <h3>Actions</h3>
+    <hr>
+    <h4>Add a new team member</h4>
+
+    <table id="example" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Names</th>
+                <th>username</th>
+                <th>contacts</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if members %}
+            {% for member in members %}
+            <tr>
+                <td>{{ member.first_name }} {{ member.last_name}}</td>
+                <td>
+                    {{ member.username }}
+                    {% if member.is_active %}
+                        <span class="badge bg-primary text-white p2">active</span>
+                    {% else %}
+                        <span class="badge bg-danger text-white p2">inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ member.email }} {{ member.profile.phone}}</td>
+                <td>
+                    <div class="btn-group dropstart">
+                        <button class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear-fill" style="font-size: 18px;"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="list-group list-group-action list-group-flush">
+                                <a href="" class="list-group-item list-group-item-action">
+                                    <i class=" bi bi-trash" style="color:red;font-size: 1reem;"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'member-view' member.id%}" class="btn text-primary">
+                            <i data-feather="corner-up-right" style="font-size: 1rem;"></i>
+                        </a>
+                        
+                    </div>
+                </td>
+
+            </tr>
+            {% endfor %}
+            {% else %}
+            <th>-</th>
+            <th>No Members</th>
+            <th>-</th>
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Names</th>
+                <th>username</th>
+                <th>contacts</th>
+                <th>Actions</th>
+            </tr>
+        </tfoot>
+    </table>
+    <hr>
+    <div class="mb-3">
+        <div class="mb-3">
+            <a href="#" class="btn btn-primary"> Email {{ team.leader }}</a>
+        </div>
+        <hr>
+        Danger zone
+        <div class="my-3">
+            <a href="#" class="btn btn-danger">Delete team</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

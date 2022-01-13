@@ -1,0 +1,4 @@
+release: python manage.py makemigrations 
+web: gunicorn udictihub.wsgi
+
+

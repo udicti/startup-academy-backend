@@ -1,0 +1,137 @@
+{% extends "dashboard/dashboard_base.html"%}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+        $('#members-table').DataTable();
+    });
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+<div class="row mt-3 container-fluid">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body mb-3">
+                <div class="text-center">
+                    <h1>{{ team.name }}</h1>
+                    <span class="badge">
+                        <a href="#" class="btn btn-sm"> Edit Name</a>
+                    </span>
+                    <hr>
+                </div>
+
+                <div class="mb-3">
+                    <p>
+                        <b>{{nmembers }}</b> - members
+                        <b>{{ per_progress}} % </b> - progress
+                    </p>
+                    <p>
+                        led by: {{ team.leader }}
+                    </p>
+                </div>
+                <hr>
+
+                <div class="mb-3">
+                    <!-- user search logic -->
+                    <a href="#all_members">Add a new member</a>
+
+                </div>
+
+
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-3 p-2">
+            <table id="members-table" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>member</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if members %}
+                    {% for member in members %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'team-view' team.id%}">
+                                {{member}}
+                            </a>
+                            {% if team.leader == member %}
+                            <span class="badge bg-primary">leader</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <th>No teams yet</th>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="mb-3 d-flex" style="min-height: 320px;min-width: 100%;">
+    <div class="card w-100" style="min-height: 100%;">
+        <div class="card-body">
+            <h4>Progress graph</h4>
+            <hr>
+
+        </div>
+    </div>
+</div>
+
+<div class="mb-3 container ">
+
+    <h3>Actions</h3>
+    <hr>
+    <h4>Add a new team member</h4>
+    <div class="card mb-3 p-2" id="all_members">
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>username</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if all_members %}
+                {% for member in all_members %}
+                <tr>
+                    <td>
+                        <label for="">
+                            {{ member.username}}
+                        </label>
+                        <a href="" class="btn">
+                            <i class="bi bi-add"></i>
+                            add
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <th>No users</th>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="mb-3">
+        <div class="mb-3">
+            <a href="#" class="btn btn-primary"> Email {{ team.leader }}</a>
+        </div>
+        <hr>
+        Danger zone
+        <div class="my-3">
+            <a href="#" class="btn btn-danger">Delete team</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
