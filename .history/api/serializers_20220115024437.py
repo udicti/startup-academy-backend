@@ -63,7 +63,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 	# post_likes = serializers.HyperlinkedRelatedField(many=True, view_name='postLike-detail', read_only=True)
 	password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 	password2 = serializers.CharField(write_only=True, required=True)
-	teams = TeamsSerializer(many=True, read_only=True)
+	teams = TeamsSerializer(many=True, read_only)
 	class Meta:
 		model = User
 		fields = ['url','username','is_active', 'first_name', 'last_name','email','last_login','date_joined','password',\
