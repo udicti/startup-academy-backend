@@ -76,7 +76,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			'email':{'required':True},
 			'username':{'required':True},
 			'groups':{'required':True},
-			'teams':{'required':False},
+			'groups':{'required':True},
 			'project_likes':{'required':False},
 			'project_reviews':{'required':False},
 			'posts':{'required':False},
