@@ -139,12 +139,10 @@ def send_email_for_password_reset(user, thread=True, **kwargs):
     email_payload = {
         "email-subject":"Udictihub Password reset",
         "email-receiver": user.email,
-        "email-body": [
-            f"p> Dear {user.username}",
-            f"p> Your request to reset your password has been received.",
-            f"p> You are required to follow the link below to renew your password. ",
-            f"a> Password reset link for {user.username} href> {url}"
-            ]
+        "email-body":f"""
+        <h2>Dear {user.username}</h2> Your request to reset your password has been received. <br>
+        You are required to follow the link below to renew your password. <br>
+        Password reset link for {user.username} <br> {url}"""
     }
 
     send_mail(email_payload)
