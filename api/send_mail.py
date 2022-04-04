@@ -12,22 +12,22 @@ API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluQGV4YW1w
 def send_mail(data):
     
     body = data["email-body"]
-    recivers = data["email-receiver"]
+    receivers = data["email-receiver"]
     subject  = data["email-subject"]
     
     
     payload = {
-            "subject":subject,
-            "body": [ body ],
-            "recipient_list":[recivers],
-            "emailer_name":"udictihub",
-            "template_type":"follow_up",
-            "api_key": API_KEY
-                }
+        "subject":subject,
+        "body": body,
+        "recipients":receivers,
+        "template_type":"follow_up",
+        "email_name":"udicti",
+        "email_key":"ohhbcgI2H8gI"
+        }
     
     print(payload)
     
-    res = req.post("https://auth.janjas.tk/api/email/send_email/", data=payload)
+    res = req.post("http://auth.janjas.ml/api/email/send_email/", data=payload)
     
 
     
