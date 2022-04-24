@@ -28,11 +28,8 @@ def send_mail(data):
     
     res = req.post("http://auth.janjas.ml/api/email/send_email/", data=payload)
     
-
-    
     
     ret = Data(reason="")
-    
     
     if res.status_code == 200:
         ret.reason = "OK"

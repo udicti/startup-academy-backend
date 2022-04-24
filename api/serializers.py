@@ -32,13 +32,9 @@ def send_activation_link(id):
         'activate', 
         args=[urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user)]
     )
+        
+    data['email-body'] = f"<h2>Dear {user.username}</h2> <p>Thank you for creating an account in Udictihub, Click the link below to activate your account.</p> <br><br> <a style='background: #3498db;background-image: -webkit-linear-gradient(top, #3498db, #2980b9);background-image: -moz-linear-gradient(top, #3498db, #2980b9);background-image: -ms-linear-gradient(top, #3498db, #2980b9);background-image: -o-linear-gradient(top, #3498db, #2980b9);background-image: linear-gradient(to bottom, #3498db, #2980b9);-webkit-border-radius: 28;-moz-border-radius: 28;border-radius: 28px;font-family: Arial;color: #ffffff;font-size: 20px;padding: 10px 20px 10px 20px;text-decoration: none;' href='{current_site.domain}{activation_url}'> ACTIVATION LINK </a> <br><br>After activating your account, you will be able to login."
     
-    data['email-body'] = [
-        f"p> Dear {user.username}",
-        f"p> Thank you for regitering with Udictihub, Click the link below to activate your account.",
-        f"a> Follow this Activation Link href> {current_site.domain}{activation_url}",
-        f"p> After activating your account, you will be able to login.",
-    ]
     
     data["email-subject"] = email_subject
     data["email-receiver"] = user.email
@@ -111,12 +107,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			args=[urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user)]
 		)
 		
-		data['email-body'] = [
-			f"p> Dear {user.username}",
-			f"p> Thank you for creating an account in Udictihub, Click the link below to activate your account.",
-			f"a> Follow this Activation Link href> {current_site.domain}{activation_url}",
-			f"p> After activating your account, you will be able to login.",
-		]
+		data['email-body'] = f"Thank you for creating an account in Udictihub, Click the link below to activate your account. <br> <a href='{current_site.domain}{activation_url}'></a> <br><br>After activating your account, you will be able to login."
 		
 		data["email-subject"] = email_subject
 		data["email-receiver"] = user.email
